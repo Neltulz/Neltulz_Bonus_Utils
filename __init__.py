@@ -2,8 +2,8 @@ bl_info = {
     "name" : "Neltulz - Bonus Utils",
     "author" : "Neil V. Moore",
     "description" : "A collection of miscellaneous bonus utilities",
-    "blender" : (2, 80, 0),
-    "version" : (1, 0, 0),
+    "blender" : (2, 81, 0),
+    "version" : (1, 0, 1),
     "location" : "View3D",
     "warning" : "",
     "category" : "3D View",
@@ -31,6 +31,8 @@ from . ot_modifiertools           import NTZBNSUTLS_OT_modifiervisibility
 from . ot_modifiertools           import NTZBNSUTLS_OT_applymodifiers
 from . ot_modifiertools           import NTZBNSUTLS_OT_removemodifiers
 from . ot_modifiertools           import NTZBNSUTLS_OT_openmodifiersidebar
+from . ot_subdivideplus           import NTZBNSUTLS_OT_subdivideplus
+from . ot_offsetfaces             import NTZBNSUTLS_OT_offsetfaces
 from . pie_misc                   import NTZBNSUTLS_OT_modifiertoolspie
 
 #panels
@@ -72,6 +74,8 @@ classes = (
     NTZBNSUTLS_OT_removemodifiers,
     NTZBNSUTLS_OT_openmodifiersidebar,
     NTZBNSUTLS_OT_modifiertoolspie,
+    NTZBNSUTLS_OT_subdivideplus,
+    NTZBNSUTLS_OT_offsetfaces,
 
     #panels
     NTZBNSUTLS_PT_selcontigedgoptions,

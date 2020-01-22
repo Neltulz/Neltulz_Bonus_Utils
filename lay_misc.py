@@ -25,10 +25,11 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
         sectionInner = sectionRow.column(align=True)
 
         #Delete all Unsel Objs
-        btn = sectionInner.operator("ntzbnsutls.delallunselobjs", text="Del Unsel Objs")
+        btn = sectionInner.operator("ntzbnsutls.delallunselobjs", text="Delete Unselected Objects")
+        
 
 
-    createShowHide(self, context, scn, "ntzbnsutls", "show_meshEditMode_section", None, 'Mesh - Edit Mode', layout)
+    createShowHide(self, context, scn, "ntzbnsutls", "show_meshEditMode_section", None, 'Mesh', layout)
 
     if scn.ntzbnsutls.show_meshEditMode_section:
         sectionRow = layout.row(align=True)
@@ -37,12 +38,29 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
 
         #Select Contiguous Edges
         btnWithDropdown = sectionInner.row(align=True)
-        op = btnWithDropdown.operator("ntzbnsutls.selcontigedg", text="Sel Contig Edges")
+        op = btnWithDropdown.operator("ntzbnsutls.selcontigedg", text="Select Contiguous Edges")
         if scn.ntzbnsutls_selcontigedg.useCustomSettings == "CUSTOM": op.bForcePanelOptions = True
+
+        sectionInner.separator()
 
         popover = btnWithDropdown.row(align=True)
         popover.alignment="RIGHT"
         popoverBtn = popover.popover(text="", panel="NTZBNSUTLS_PT_selcontigedgoptions", icon="NONE")
+
+        #sectionInner.separator()
+
+        #Subdivide+
+        btnWithDropdown = sectionInner.row(align=True)
+        op = btnWithDropdown.operator("ntzbnsutls.subdivideplus", text="Subdivide+")
+
+        '''
+        popover = btnWithDropdown.row(align=True)
+        popover.alignment="RIGHT"
+        popoverBtn = popover.popover(text="", panel="NTZBNSUTLS_PT_selcontigedgoptions", icon="NONE")
+        '''
+
+        #Offset Faces
+        btn = sectionInner.operator("ntzbnsutls.offsetfaces", text="Offset Faces")
 
     createShowHide(self, context, scn, "ntzbnsutls", "show_modifiers_section", None, 'Modifiers', layout)
 
@@ -81,10 +99,6 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
         if scn.ntzbnsutls_mdfrtools.useCustomModifierApplySettings == "CUSTOM": op.bForcePanelOptions = True
 
         op = btnRow.operator("ntzbnsutls.removemodifiers", text="Remove")
-
-
-
-
 
 #Show hide section with arrow, optional checkbox, and text
 def createShowHide(self, context, scn, properties, showHideBool, optionalCheckboxBool, text, layout):
@@ -165,12 +179,10 @@ def createPropWithHideButtonAlt(self, context, scn, properties, propName, custom
     resetPropOp                = resetPropCol.operator("ntzbnsutls.resetsettings", text="", icon="LOOP_BACK", emboss=embossResetBtn)
     resetPropOp.settingToReset = propName
 
-
-
-
 def modifierToolsOptions(self, context, scn, layout):
 
-
+    layout.label(text='Modifiers', icon="MODIFIER")
+    layout.separator()
     layout.label(text="Visibility Settings:")
     useCustomVisibilitySettings = layout.prop(scn.ntzbnsutls_mdfrtools, "useCustomModifierVisibilitySettings", text="")
 
@@ -237,7 +249,9 @@ def modifierToolsOptions(self, context, scn, layout):
 def selContigEdgesSettings(self, context, scn, layout):
 
 
-    layout.label(text="Settings:")
+    layout.label(text='Select Contiguous Edges', icon="SNAP_MIDPOINT")
+    layout.separator()
+    layout.label(text='Settings:')
     useCustomSettings = layout.prop(scn.ntzbnsutls_selcontigedg, "useCustomSettings", text="")
 
     if scn.ntzbnsutls_selcontigedg.useCustomSettings == "CUSTOM":

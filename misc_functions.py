@@ -67,3 +67,14 @@ def getUnselObjs(self, context):
     allObjs = [obj for obj in context.scene.objects]
     selObjs = [obj for obj in bpy.context.selected_objects]
     return [obj for obj in allObjs if obj not in selObjs] #unselected objs
+
+def findModifier(self, context, obj, modifierName):
+
+    foundModifier = None #declare
+    for modifier in obj.modifiers:
+    
+        if modifier.name == "Neltulz - Offset Faces":
+            foundModifier = modifier
+            break
+
+    return foundModifier
