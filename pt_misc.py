@@ -51,7 +51,7 @@ class NTZBNSUTLS_PT_modifiertoolsoptions(Panel):
 
 
 class NTZBNSUTLS_PT_sidebarpanel(Panel):
-    bl_label = "Bonus Utils v1.0.1"
+    bl_label = "Bonus Utils v1.0.2"
     bl_category = "Neltulz"
     bl_space_type = "VIEW_3D"
     bl_region_type = "UI"

@@ -3,7 +3,7 @@ bl_info = {
     "author" : "Neil V. Moore",
     "description" : "A collection of miscellaneous bonus utilities",
     "blender" : (2, 81, 0),
-    "version" : (1, 0, 1),
+    "version" : (1, 0, 2),
     "location" : "View3D",
     "warning" : "",
     "category" : "3D View",
@@ -31,8 +31,10 @@ from . ot_modifiertools           import NTZBNSUTLS_OT_modifiervisibility
 from . ot_modifiertools           import NTZBNSUTLS_OT_applymodifiers
 from . ot_modifiertools           import NTZBNSUTLS_OT_removemodifiers
 from . ot_modifiertools           import NTZBNSUTLS_OT_openmodifiersidebar
+from . ot_aiotoolsettings         import NTZBNSUTLS_OT_aiotoolsettings
 from . ot_subdivideplus           import NTZBNSUTLS_OT_subdivideplus
 from . ot_offsetfaces             import NTZBNSUTLS_OT_offsetfaces
+from . ot_normalextrudeplus       import NTZBNSUTLS_OT_normalextrudeplus
 from . pie_misc                   import NTZBNSUTLS_OT_modifiertoolspie
 
 #panels
@@ -73,9 +75,11 @@ classes = (
     NTZBNSUTLS_OT_applymodifiers,
     NTZBNSUTLS_OT_removemodifiers,
     NTZBNSUTLS_OT_openmodifiersidebar,
+    NTZBNSUTLS_OT_aiotoolsettings,
     NTZBNSUTLS_OT_modifiertoolspie,
     NTZBNSUTLS_OT_subdivideplus,
     NTZBNSUTLS_OT_offsetfaces,
+    NTZBNSUTLS_OT_normalextrudeplus,
 
     #panels
     NTZBNSUTLS_PT_selcontigedgoptions,
@@ -115,7 +119,7 @@ def register():
     #add property group to the scene
     bpy.types.Scene.ntzbnsutls                  = bpy.props.PointerProperty(type=NTZBNSUTLS_props  )
     bpy.types.Scene.ntzbnsutls_selcontigedg     = bpy.props.PointerProperty(type=NTZBNSUTLS_selcontigedgprops)
-    bpy.types.Scene.ntzbnsutls_mdfrtools          = bpy.props.PointerProperty(type=NTZBNSUTLS_mdfrtoolsprops)
+    bpy.types.Scene.ntzbnsutls_mdfrtools        = bpy.props.PointerProperty(type=NTZBNSUTLS_mdfrtoolsprops)
 
     #vscode pme workaround from iceythe (part 1 of 2)
     #must be appended to def register() so that it is the last thing that executes

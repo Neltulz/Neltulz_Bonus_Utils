@@ -29,11 +29,11 @@ class NTZBNSUTLS_OT_delallunselobjs(Operator):
 
     def execute(self, context):
 
-        scene = context.scene
+        scn = context.scene
 
         #store list of objects & selected objects
         objs = bpy.data.objects
-        selObjs = [obj for obj in bpy.context.selected_objects]
+        selObjs = bpy.context.selected_objects
 
         objs_to_be_removed = set() #declare
 
@@ -51,7 +51,7 @@ class NTZBNSUTLS_OT_delallunselobjs(Operator):
 
             #store list of objects & selected objects
             objs = bpy.data.objects
-            selObjs = [obj for obj in bpy.context.selected_objects]
+            selObjs = context.selected_objects
 
 
             for collection in bpy.data.collections:

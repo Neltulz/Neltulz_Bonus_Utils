@@ -53,14 +53,11 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
         btnWithDropdown = sectionInner.row(align=True)
         op = btnWithDropdown.operator("ntzbnsutls.subdivideplus", text="Subdivide+")
 
-        '''
-        popover = btnWithDropdown.row(align=True)
-        popover.alignment="RIGHT"
-        popoverBtn = popover.popover(text="", panel="NTZBNSUTLS_PT_selcontigedgoptions", icon="NONE")
-        '''
+        #Offset All Faces
+        btn = sectionInner.operator("ntzbnsutls.offsetfaces", text="Offset All Faces")
 
-        #Offset Faces
-        btn = sectionInner.operator("ntzbnsutls.offsetfaces", text="Offset Faces")
+        #Normal Extrude+
+        btn = sectionInner.operator("ntzbnsutls.normalextrudeplus", text="Normal Extrude+")
 
     createShowHide(self, context, scn, "ntzbnsutls", "show_modifiers_section", None, 'Modifiers', layout)
 
