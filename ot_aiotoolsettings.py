@@ -76,13 +76,13 @@ class NTZBNSUTLS_OT_aiotoolsettings(Operator):
         box.separator()
 
 
+        if activeObjAtBegin is not None:
+            if activeObjAtBegin.type == "MESH":
 
-        if activeObjAtBegin.type == "MESH":
+                layEngine = LayoutEngine(box)
+                layEngine.bl_space_type = 'VIEW_3D'
 
-            layEngine = LayoutEngine(box)
-            layEngine.bl_space_type = 'VIEW_3D'
-
-            VIEW3D_PT_tools_meshedit_options.draw(layEngine, context)
+                VIEW3D_PT_tools_meshedit_options.draw(layEngine, context)
 
         
 
