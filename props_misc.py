@@ -21,6 +21,11 @@ class NTZBNSUTLS_props(PropertyGroup):
         default = True,
     )
 
+    show_3dcursor_section : BoolProperty (
+        name="Show 3D Cursor Section",
+        default = True,
+    )
+
 #Select Contiguous Edges Properties
 class NTZBNSUTLS_selcontigedgprops(PropertyGroup):
 

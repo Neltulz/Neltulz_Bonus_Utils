@@ -142,12 +142,6 @@ class NTZBNSUTLS_OT_normalextrudeplus(Operator):
                     for f in selFacesAfterGrowing & allFaces:
                         f.select = True #select faces after growing
 
-                        '''
-                        if f in allFaces: #safety check to ensure face exists
-                            f.select = True
-                        '''
-                        
-
                 else:
                     
                     #select faces after solidify, but before growing selection (deselects the walls) (similar to select less)

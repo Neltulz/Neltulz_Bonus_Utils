@@ -3,7 +3,7 @@ bl_info = {
     "author" : "Neil V. Moore",
     "description" : "A collection of miscellaneous bonus utilities",
     "blender" : (2, 81, 0),
-    "version" : (1, 0, 2),
+    "version" : (1, 0, 3),
     "location" : "View3D",
     "warning" : "",
     "category" : "3D View",
@@ -35,6 +35,10 @@ from . ot_aiotoolsettings         import NTZBNSUTLS_OT_aiotoolsettings
 from . ot_subdivideplus           import NTZBNSUTLS_OT_subdivideplus
 from . ot_offsetfaces             import NTZBNSUTLS_OT_offsetfaces
 from . ot_normalextrudeplus       import NTZBNSUTLS_OT_normalextrudeplus
+from . ot_cursor                  import NTZBNSUTLS_OT_adjust3dcursor
+from . ot_cursor                  import NTZBNSUTLS_OT_apply3dcursor
+from . ot_cursor                  import NTZBNSUTLS_OT_rotate3dcursor
+from . ot_cursor                  import NTZBNSUTLS_OT_snapcursorplus
 from . pie_misc                   import NTZBNSUTLS_OT_modifiertoolspie
 
 #panels
@@ -76,10 +80,14 @@ classes = (
     NTZBNSUTLS_OT_removemodifiers,
     NTZBNSUTLS_OT_openmodifiersidebar,
     NTZBNSUTLS_OT_aiotoolsettings,
-    NTZBNSUTLS_OT_modifiertoolspie,
     NTZBNSUTLS_OT_subdivideplus,
     NTZBNSUTLS_OT_offsetfaces,
     NTZBNSUTLS_OT_normalextrudeplus,
+    NTZBNSUTLS_OT_adjust3dcursor,
+    NTZBNSUTLS_OT_apply3dcursor,
+    NTZBNSUTLS_OT_rotate3dcursor,
+    NTZBNSUTLS_OT_snapcursorplus,
+    NTZBNSUTLS_OT_modifiertoolspie,
 
     #panels
     NTZBNSUTLS_PT_selcontigedgoptions,

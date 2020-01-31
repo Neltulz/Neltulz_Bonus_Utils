@@ -17,6 +17,10 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
             layout.ui_units_x = 13
             layout.label(text="Neltulz - Bonus Utils")
 
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+    # Object Section
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+
     createShowHide(self, context, scn, "ntzbnsutls", "show_object_section", None, 'Object', layout)
 
     if scn.ntzbnsutls.show_object_section:
@@ -28,6 +32,9 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
         btn = sectionInner.operator("ntzbnsutls.delallunselobjs", text="Delete Unselected Objects")
         
 
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+    # Mesh Section
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
 
     createShowHide(self, context, scn, "ntzbnsutls", "show_meshEditMode_section", None, 'Mesh', layout)
 
@@ -58,6 +65,10 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
 
         #Normal Extrude+
         btn = sectionInner.operator("ntzbnsutls.normalextrudeplus", text="Normal Extrude+")
+
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+    # Modifiers Section
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
 
     createShowHide(self, context, scn, "ntzbnsutls", "show_modifiers_section", None, 'Modifiers', layout)
 
@@ -96,6 +107,27 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
         if scn.ntzbnsutls_mdfrtools.useCustomModifierApplySettings == "CUSTOM": op.bForcePanelOptions = True
 
         op = btnRow.operator("ntzbnsutls.removemodifiers", text="Remove")
+
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+    # 3D Cursor Section
+    #-----------------------------------------------------------------------------------------------------------------------------------------------
+
+    createShowHide(self, context, scn, "ntzbnsutls", "show_3dcursor_section", None, '3D Cursor', layout)
+
+    if scn.ntzbnsutls.show_3dcursor_section:
+        sectionRow = layout.row(align=True)
+        leftIndent = sectionRow.label(text="", icon="BLANK1")
+        sectionInner = sectionRow.column(align=True)
+
+        btnRow = sectionInner.row(align=True)
+        op = btnRow.operator("ntzbnsutls.adjust3dcursor", text="Adjust")
+        op = btnRow.operator("ntzbnsutls.apply3dcursor", text="Apply")
+        op = btnRow.operator("ntzbnsutls.rotate3dcursor", text="Rotate")
+
+        btnRow = sectionInner.row(align=True)
+        op = btnRow.operator("ntzbnsutls.snapcursorplus", text="Snap Cursor+")
+
+        
 
 #Show hide section with arrow, optional checkbox, and text
 def createShowHide(self, context, scn, properties, showHideBool, optionalCheckboxBool, text, layout):
