@@ -6,8 +6,8 @@ from mathutils      import Matrix
 from mathutils      import Euler
 from mathutils      import Vector
 from math           import radians
-from .              import misc_functions
-from .              import lay_misc
+from .              import miscFunc
+from .              import miscLay
 
 from bpy.props import (StringProperty, BoolProperty, IntProperty, FloatProperty, FloatVectorProperty, EnumProperty, PointerProperty)
 from bpy.types import (Panel, Operator, AddonPreferences, PropertyGroup)
@@ -18,11 +18,11 @@ from bpy.types import (Panel, Operator, AddonPreferences, PropertyGroup)
 # Author      : Neltulz (Neil V. Moore)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-class NTZBNSUTLS_OT_adjust3dcursor(Operator):
-    bl_idname = "ntzbnsutls.adjust3dcursor"
-    bl_label = "Neltulz - Bonus Utils : Adjust 3D Cursor"
-    bl_description = "Adds an empty at the location of the 3D cursor, which the user can move/rotate before applying"
-    bl_options = {'REGISTER', 'UNDO',
+class VIEW3D_OT_ntzbu_adjust_3d_cursor(Operator):
+    bl_idname           = "view3d.ntzbu_adjust_3d_cursor"
+    bl_label            = "NTZBU : Adjust 3D Cursor"
+    bl_description      = "Adds an empty at the location of the 3D cursor, which the user can move/rotate before applying"
+    bl_options          = {'REGISTER', 'UNDO',
     #'PRESET'
     }
     
@@ -91,11 +91,11 @@ class NTZBNSUTLS_OT_adjust3dcursor(Operator):
 
         obj = context.object
 
-        lay_misc.createProp(self, context, None, True, "Display As", self, "emptyDisplayType", 1, 5, 20, "RIGHT", "EXPAND", "",  False, False, lay)
+        miscLay.createPropOLD(self, context, None, True, "Display As", self, "emptyDisplayType", 1, 5, 20, "RIGHT", "EXPAND", "",  False, False, lay)
 
         lay.separator()
 
-        lay_misc.createProp(self, context, None, True, "Size",       self, "size",             1, 5, 20, "RIGHT", "EXPAND", "",  False, False, lay)
+        miscLay.createPropOLD(self, context, None, True, "Size",       self, "size",             1, 5, 20, "RIGHT", "EXPAND", "",  False, False, lay)
 
     #END draw()
 
@@ -107,11 +107,11 @@ class NTZBNSUTLS_OT_adjust3dcursor(Operator):
 # Author      : Neltulz (Neil V. Moore)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-class NTZBNSUTLS_OT_apply3dcursor(Operator):
-    bl_idname = "ntzbnsutls.apply3dcursor"
-    bl_label = "Neltulz - Bonus Utils : Apply 3D Cursor"
-    bl_description = "Updates the location/rotation of the 3D Cursor from a temporary empty"
-    bl_options = {'REGISTER', 'UNDO',
+class VIEW3D_OT_ntzbu_apply_3d_cursor(Operator):
+    bl_idname           = "view3d.ntzbu_apply_3d_cursor"
+    bl_label            = "NTZBU : Apply 3D Cursor"
+    bl_description      = "Updates the location/rotation of the 3D Cursor from a temporary empty"
+    bl_options          = {'REGISTER', 'UNDO',
     #'PRESET'
     }
 
@@ -175,11 +175,11 @@ class NTZBNSUTLS_OT_apply3dcursor(Operator):
 # Permission  : Special thanks to iceythe for the creation of this script and permission to include it with the Neltulz - Bonus Utils add-on
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-class NTZBNSUTLS_OT_rotate3dcursor(Operator):
-    bl_idname = "ntzbnsutls.rotate3dcursor"
-    bl_label = "Neltulz - Bonus Utils : Rotate 3D Cursor"
-    bl_description = "Rotate 3D Cursor"
-    bl_options = {'REGISTER', 'UNDO',
+class VIEW3D_OT_ntzbu_rotate_3d_cursor(Operator):
+    bl_idname           = "view3d.ntzbu_rotate_3d_cursor"
+    bl_label            = "NTZBU : Rotate 3D Cursor"
+    bl_description      = "Rotate 3D Cursor"
+    bl_options          = {'REGISTER', 'UNDO',
     #'PRESET'
     }
     xyz: bpy.props.FloatVectorProperty(size=3, min=-180, max=180)
@@ -218,16 +218,13 @@ class NTZBNSUTLS_OT_rotate3dcursor(Operator):
 # Author      : Neltulz (Neil V. Moore)
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-class NTZBNSUTLS_OT_snapcursorplus(Operator):
-    bl_idname = "ntzbnsutls.snapcursorplus"
-    bl_label = "Neltulz - Bonus Utils : Snap Cursor+"
-    bl_description = "Snaps cursor to selected with orientation"
-    bl_options = {'REGISTER', 'UNDO',
+class VIEW3D_OT_ntzbu_snap_cursor_plus(Operator):
+    bl_idname           = "view3d.ntzbu_snap_cursor_plus"
+    bl_label            = "NTZBU : Snap Cursor+"
+    bl_description      = "Snaps cursor to selected with orientation"
+    bl_options          = {'REGISTER', 'UNDO',
     #'PRESET'
     }
-
-
-
 
     cursorLocationAtInvoke : FloatVectorProperty (
         name="Cursor Location at Invoke"
@@ -291,9 +288,6 @@ class NTZBNSUTLS_OT_snapcursorplus(Operator):
         if not self.useLocation:
             locationRow.enabled = False
         locationRow.prop(self, 'location', text='')
-
-        #row = lay.row(align=True)
-        #lay_misc.createProp(self, context, None, True, "Location", self, "location", 1, 6.6, 20, "RIGHT", "EXPAND", "", False, False, lay)
 
         lay.separator()
 
@@ -365,7 +359,7 @@ class NTZBNSUTLS_OT_snapcursorplus(Operator):
 
         if self.useLocation:
 
-            transformPivotPoint = scn.tool_settings.transform_pivot_point
+            transformPivotPointAtBegin = str(scn.tool_settings.transform_pivot_point)
 
             def getLocationFromBoundingBoxCenter():
 
@@ -373,7 +367,7 @@ class NTZBNSUTLS_OT_snapcursorplus(Operator):
 
                     if objectModeAtBegin == "OBJECT":
                         
-                        if transformPivotPoint == "ACTIVE_ELEMENT":
+                        if transformPivotPointAtBegin == "ACTIVE_ELEMENT":
                             bpy.ops.view3d.snap_cursor_to_active()
 
                         else:
@@ -395,7 +389,7 @@ class NTZBNSUTLS_OT_snapcursorplus(Operator):
                             bpy.ops.view3d.snap_cursor_to_selected() #sloppy fallback
                 
                 else:
-                    if transformPivotPoint == "ACTIVE_ELEMENT":
+                    if transformPivotPointAtBegin == "ACTIVE_ELEMENT":
                         bpy.ops.view3d.snap_cursor_to_active()
 
                     else:
@@ -408,7 +402,7 @@ class NTZBNSUTLS_OT_snapcursorplus(Operator):
 
                     if objectModeAtBegin == "OBJECT":
                         
-                        if transformPivotPoint == "ACTIVE_ELEMENT":
+                        if transformPivotPointAtBegin == "ACTIVE_ELEMENT":
                             bpy.ops.view3d.snap_cursor_to_active()
 
                         else:
@@ -417,7 +411,7 @@ class NTZBNSUTLS_OT_snapcursorplus(Operator):
                         bpy.ops.view3d.snap_cursor_to_selected()
 
                 else:
-                    if transformPivotPoint == "ACTIVE_ELEMENT":
+                    if transformPivotPointAtBegin == "ACTIVE_ELEMENT":
                         bpy.ops.view3d.snap_cursor_to_active()
 
                     else:
@@ -427,26 +421,35 @@ class NTZBNSUTLS_OT_snapcursorplus(Operator):
 
             if self.location == "TFORMPIVOT":
                 
-                if transformPivotPoint == "BOUNDING_BOX_CENTER":
+                if transformPivotPointAtBegin == "BOUNDING_BOX_CENTER":
                     getLocationFromBoundingBoxCenter()
 
-                elif transformPivotPoint == "MEDIAN_POINT":
+                elif transformPivotPointAtBegin == "MEDIAN_POINT":
                     getLocationFromMedianPoint()
 
-                elif transformPivotPoint == "ACTIVE_ELEMENT":
+                elif transformPivotPointAtBegin == "ACTIVE_ELEMENT":
                     bpy.ops.view3d.snap_cursor_to_active()
+
+                else:
+                    getLocationFromMedianPoint() #all other situations (e.g. individual origins, cursor, etc)
 
             elif self.location == "DEFAULT":
                 bpy.ops.view3d.snap_cursor_to_selected()
 
             elif self.location == "BOUNDING_BOX_CENTER":
+                scn.tool_settings.transform_pivot_point = self.location
                 getLocationFromBoundingBoxCenter()
+                scn.tool_settings.transform_pivot_point = transformPivotPointAtBegin #reset
 
             elif self.location == "MEDIAN_POINT":
+                scn.tool_settings.transform_pivot_point = self.location
                 getLocationFromMedianPoint()
+                scn.tool_settings.transform_pivot_point = transformPivotPointAtBegin #reset
 
             elif self.location == "ACTIVE_ELEMENT":
+                scn.tool_settings.transform_pivot_point = self.location
                 bpy.ops.view3d.snap_cursor_to_active()
+                scn.tool_settings.transform_pivot_point = transformPivotPointAtBegin #reset
 
             elif self.location == "WORIGIN":
                 scn.cursor.location = (0,0,0)

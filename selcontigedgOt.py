@@ -10,7 +10,7 @@ import bmesh
 from math import degrees
 from math import radians
 from operator import itemgetter
-from . import misc_functions
+from . import miscFunc
 
 from bpy.props import (StringProperty, BoolProperty, IntProperty, FloatProperty, FloatVectorProperty, EnumProperty, PointerProperty)
 from bpy.types import (Panel, Operator, AddonPreferences, PropertyGroup)
@@ -55,18 +55,19 @@ def edges_indiv_get(bm, maxAngle):
     return indiv
 
 
-class NTZBNSUTLS_OT_selcontigedg(Operator):
-    bl_idname = "ntzbnsutls.selcontigedg"
-    bl_label = "Neltulz - Bonus Utils : Select Contiguous Edges"
-    bl_description = "Select Contiguous Edges - Grow Edge Selection By Angle"
-    bl_options = {'REGISTER', 'UNDO', 'PRESET'}
+class VIEW3D_OT_ntzbu_select_contiguous_edges(Operator):
+    bl_idname           = "view3d.ntzbu_select_contiguous_edges"
+    bl_label            = "NTZBU : Select Contiguous Edges"
+    bl_description      = "Select Contiguous Edges - Grow Edge Selection By Angle"
+    bl_options          = {'REGISTER', 'UNDO', 'PRESET'}
 
     
-    bForcePanelOptions : BoolProperty(
-        name="Force Panel Options",
-        description='Gets all of the operator properties from the sidebar panel options.  This will override any settings in the user customized keymap.',
-        default = False
+    bUseOverridesFromAddonPrefs : BoolProperty(
+        name="Use Overrides from Add-on Preferences",
+        description='Gets operator properties from the addon-preferences.  This will override any settings in the user customized keymap.  If you want to prevent the addon preferences from setting your operator properties, set this to False',
+        default = True
     )
+    
 
     reset_maxAngle : BoolProperty( name = "Reset Max Angle", default = False )
     maxAngle : IntProperty(
@@ -151,7 +152,7 @@ class NTZBNSUTLS_OT_selcontigedg(Operator):
             ["reset_direction", ["direction"] ],
         ]
 
-        misc_functions.resetOperatorProps(self, context, propsToReset)
+        miscFunc.resetOperatorProps(self, context, propsToReset)
         
         ob = bpy.context.object
         bm = bmesh.from_edit_mesh(ob.data)
@@ -200,27 +201,30 @@ class NTZBNSUTLS_OT_selcontigedg(Operator):
 
         bmesh.update_edit_mesh(ob.data)
 
-        #final step:
-        self.bForcePanelOptions = False
-
-
     def invoke(self, context, event):
         scn = context.scene
+
+        addonPrefs = context.preferences.addons[__package__].preferences
         
-        if self.bForcePanelOptions:
+        if self.bUseOverridesFromAddonPrefs:
 
-            if scn.ntzbnsutls_selcontigedg.useCustomSettings == "CUSTOM":
+            #prop list
+            propList = ['maxAngle', 'maxEdges', 'direction']
+
+            for propName in propList:
                 
-                #prop list
-                propList = ['maxAngle', 'maxEdges', 'direction']
+                #get the value of the addonPrefs property
+                addonPropActive = getattr(addonPrefs, f'selContigEdg_{propName}_active', None)
 
-                for prop in propList:
+                if addonPropActive is not None:
                     
-                    #get the value of the scene property
-                    scnPropVal = getattr(scn.ntzbnsutls_selcontigedg, prop)
+                    if addonPropActive:
 
-                    #set the value of the operator property to the value of the scene property
-                    setattr(self, prop, scnPropVal)
+                        addonPropVal = getattr(addonPrefs, f'selContigEdg_{propName}', None)
+
+                        #set the value of the operator property to the value of the addonPrefs property
+                        setattr(self, propName, addonPropVal)
+
 
         return self.execute(context)
     #END invoke()

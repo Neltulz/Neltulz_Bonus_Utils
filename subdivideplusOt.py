@@ -11,23 +11,23 @@ import bmesh
 from bpy.props import (StringProperty, BoolProperty, IntProperty, FloatProperty, FloatVectorProperty, EnumProperty, PointerProperty)
 from bpy.types import (Panel, Operator, AddonPreferences, PropertyGroup)
 
-class NTZBNSUTLS_OT_subdivideplus(Operator):
-    bl_idname = 'ntzbnsutls.subdivideplus'
-    bl_description = 'Subdivide with additional features for automatically selecting newly added vertices and edgse, etc.'
-    bl_label = 'Subdivide+'
-    bl_options = {'REGISTER', 'UNDO'}
+class VIEW3D_OT_ntzbu_subdivide_plus(Operator):
+    bl_idname           = 'view3d.ntzbu_subdivide_plus'
+    bl_description      = 'Subdivide with additional features for automatically selecting newly added vertices and edgse, etc.'
+    bl_label            = 'NTZBU : Subdivide+'
+    bl_options          = {'REGISTER', 'UNDO'}
 
-    _falloffs = (('SMOOTH', 'Smooth', '', 0),
-                 ('SPHERE', 'Sphere', '', 1),
-                 ('ROOT', 'Root', '', 2),
-                 ('SHARP', 'Sharp', '', 3),
-                 ('LINEAR', 'Linear', '', 4),
-                 ('INVERSE_SQUARE', 'Inverse Square', '', 5))
+    _falloffs           = (('SMOOTH', 'Smooth', '', 0),
+                           ('SPHERE', 'Sphere', '', 1),
+                           ('ROOT', 'Root', '', 2),
+                           ('SHARP', 'Sharp', '', 3),
+                           ('LINEAR', 'Linear', '', 4),
+                           ('INVERSE_SQUARE', 'Inverse Square', '', 5))
 
-    _corner_type = (('STRAIGHT_CUT', 'Straight Cut', '', 0),
-                    ('INNER_VERT', 'Inner Vert', '', 1),
-                    ('PATH', 'Path', '', 2),
-                    ('FAN', 'Fan', '', 3))
+    _corner_type        = (('STRAIGHT_CUT', 'Straight Cut', '', 0),
+                           ('INNER_VERT', 'Inner Vert', '', 1),
+                           ('PATH', 'Path', '', 2),
+                           ('FAN', 'Fan', '', 3))
 
     _single_edge = None
     flatten: BoolProperty(name='Flatten', default=True)

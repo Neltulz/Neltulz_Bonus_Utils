@@ -2,15 +2,13 @@ import bpy
 from bpy.props          import (StringProperty, BoolProperty, IntProperty, FloatProperty, FloatVectorProperty, EnumProperty, PointerProperty)
 from bpy.types          import (Menu, Panel, Operator, AddonPreferences, PropertyGroup)
 
-from . props_misc       import NTZBNSUTLS_mdfrtoolsprops
-
 
 # -----------------------------------------------------------------------------
 #   Modifier Visibility Pie
 # ----------------------------------------------------------------------------- 
 
-class NTZBNSUTLS_MT_modifiertoolspie(Menu):
-    bl_label = "Modifier Tools"
+class VIEW3D_MT_ntzbu_modifier_tools_pie(Menu):
+    bl_label = "NTZBU : Modifier Tools"
 
     def draw(self, context):
         layout = self.layout
@@ -19,40 +17,36 @@ class NTZBNSUTLS_MT_modifiertoolspie(Menu):
         pie = layout.menu_pie()
 
         #LEFT
-        op = pie.operator("ntzbnsutls.applymodifiers", text="Apply", icon="CHECKMARK")
-        if scn.ntzbnsutls_mdfrtools.useCustomModifierVisibilitySettings == "CUSTOM": op.bForcePanelOptions = True
+        op = pie.operator("view3d.ntzbu_apply_modifiers", text="Apply", icon="CHECKMARK")
 
 
         #RIGHT
-        op = pie.operator("ntzbnsutls.removemodifiers", text="Remove", icon="PANEL_CLOSE")
+        op = pie.operator("view3d.ntzbu_remove_modifiers", text="Remove", icon="PANEL_CLOSE")
 
         #BOTTOM
-        popoverBtn = pie.popover(text="Configure", panel="NTZBNSUTLS_PT_modifiertoolsoptions", icon="SETTINGS")
+        popoverBtn = pie.popover(text="Configure", panel="VIEW3D_PT_ntzbu_modifier_tools_options", icon="SETTINGS")
         
         
         #TOP
-        op = pie.operator("ntzbnsutls.modifiervisibility", text="Toggle")
+        op = pie.operator("view3d.ntzbu_modifier_visibility", text="Toggle")
         op.enableDisableToggle = "TOGGLE"
-        if scn.ntzbnsutls_mdfrtools.useCustomModifierVisibilitySettings == "CUSTOM": op.bForcePanelOptions = True
         op.tooltip = "Toggle Modifiers.  Default: Selected Objects.  SHIFT: All Objects.  CTRL: Unselected objects"
         
         #TOP LEFT
-        op = pie.operator("ntzbnsutls.modifiervisibility", text="Enable", icon="HIDE_OFF")
+        op = pie.operator("view3d.ntzbu_modifier_visibility", text="Enable", icon="HIDE_OFF")
         op.enableDisableToggle = "ENABLE"
-        if scn.ntzbnsutls_mdfrtools.useCustomModifierVisibilitySettings == "CUSTOM": op.bForcePanelOptions = True
         op.tooltip = "Enable Modifiers.  Default: Selected Objects.  SHIFT: All Objects.  CTRL: Unselected objects"
 
         
         #TOP RIGHT
 
-        op = pie.operator("ntzbnsutls.modifiervisibility", text="Disable", icon="HIDE_ON")
+        op = pie.operator("view3d.ntzbu_modifier_visibility", text="Disable", icon="HIDE_ON")
         op.enableDisableToggle = "DISABLE"
-        if scn.ntzbnsutls_mdfrtools.useCustomModifierVisibilitySettings == "CUSTOM": op.bForcePanelOptions = True
         op.tooltip = "Disable Modifiers.  Default: Selected Objects.  SHIFT: All Objects.  CTRL: Unselected objects"
 
         
         #BOTTOM LEFT
-        op = pie.operator("ntzbnsutls.openmodifiersidebar", text="Modifiers", icon="HIDE_OFF")
+        op = pie.operator("view3d.ntzbu_open_modifiers_sidebar", text="Modifiers", icon="HIDE_OFF")
 
         
         #BOTTOM RIGHT
@@ -65,20 +59,20 @@ class NTZBNSUTLS_MT_modifiertoolspie(Menu):
 #   Operator which calls the modifier list pie
 # ----------------------------------------------------------------------------- 
 
-class NTZBNSUTLS_OT_modifiertoolspie(Operator):
+class VIEW3D_OT_ntzbu_modifier_tools_pie(Operator):
 
     """Tooltip"""
-    bl_idname = "ntzbnsutls.modifiertoolspie"
-    bl_label = "Neltulz - Bonus Utils : Modifier Tools Pie"
-    bl_description = "Modifier Tools - Pie"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_idname           = "view3d.ntzbu_modifier_tools_pie"
+    bl_label            = "NTZBU : Modifier Tools Pie"
+    bl_description      = "Modifier Tools - Pie"
+    bl_options          = {'REGISTER', 'UNDO'}
 
     @classmethod
     def poll(cls, context):
         return True
 
     def execute(self, context):
-        bpy.ops.wm.call_menu_pie(name="NTZBNSUTLS_MT_modifiertoolspie")
+        bpy.ops.wm.call_menu_pie(name="VIEW3D_MT_ntzbu_modifier_tools_pie")
         
         return {'FINISHED'}
     # END execute()

@@ -11,27 +11,20 @@ from bpy.types                 import VIEW3D_PT_active_tool, VIEW3D_PT_tools_mes
 from bpy.props                 import (StringProperty, BoolProperty, IntProperty, FloatProperty, FloatVectorProperty, EnumProperty, PointerProperty)
 from bpy.types                 import (Panel, Operator, AddonPreferences, PropertyGroup)
 
-from .                         import misc_functions
-from .                         import lay_misc
+from .                         import miscFunc
+from .                         import miscLay
 
 
 class LayoutEngine:
     def __init__(self, layout):
         self.layout = layout
 
-class NTZBNSUTLS_OT_aiotoolsettings(Operator):
-
+class VIEW3D_OT_ntzbu_all_in_one_tool_settings(Operator):
     """Tooltip"""
-    bl_idname = "ntzbnsutls.aiotoolsettings"
-    bl_label = "Neltulz - Bonus Utils : All-in-One Tool Settings"
-    bl_description = "Popup containing a lot of tool settings"
-    bl_options = {'REGISTER'}
-
-    usePopupWithOK : BoolProperty (
-        name="Use Popup With OK Button",
-        description='Adds an "OK" button to the popup and prevents the popup from disappearing until you explicitly click OK or click outside of the popup.',
-        default = False,
-    )
+    bl_idname           = "view3d.ntzbu_all_in_one_tool_settings"
+    bl_label            = "NTZBU : All-in-One Tool Settings"
+    bl_description      = "Popup containing a lot of tool settings"
+    bl_options          = {'REGISTER'}
     
 
     @classmethod
@@ -40,6 +33,8 @@ class NTZBNSUTLS_OT_aiotoolsettings(Operator):
 
     def draw(self, context):
 
+        addonPrefs = context.preferences.addons[__package__].preferences
+
         activeObjAtBegin = bpy.context.view_layer.objects.active
 
         lay = self.layout
@@ -47,8 +42,8 @@ class NTZBNSUTLS_OT_aiotoolsettings(Operator):
         scn = context.scene
 
 
-        if not self.usePopupWithOK:
-            lay.label(text="Neltulz - Bonus Utils : All-in-One Tool Settings")
+        if addonPrefs.aioToolSettings_showOKButton == "NO":
+            lay.label(text="NTZBU : All-in-One Tool Settings")
             lay.separator()
 
         row = lay.row(align=True)
@@ -163,6 +158,9 @@ class NTZBNSUTLS_OT_aiotoolsettings(Operator):
 
 
     def invoke(self, context, event):
+
+        addonPrefs = context.preferences.addons[__package__].preferences
+
         region = context.region
         rx = region.x
         ry = region.y
@@ -172,7 +170,7 @@ class NTZBNSUTLS_OT_aiotoolsettings(Operator):
 
         popHeightFull = 350
         
-        if self.usePopupWithOK:
+        if addonPrefs.aioToolSettings_showOKButton == "YES":
             popWidthHalf = 0
             mouseVOffsetPre = 145
             mouseVOffsetPost = 120
@@ -187,7 +185,7 @@ class NTZBNSUTLS_OT_aiotoolsettings(Operator):
         context.window.cursor_warp(rx + event.mouse_region_x - popWidthHalf, ry + event.mouse_region_y + popHeightFull + mouseVOffsetPre)
 
         # spawn popup
-        if self.usePopupWithOK:
+        if addonPrefs.aioToolSettings_showOKButton == "YES":
             popup = context.window_manager.invoke_props_dialog(self, width=1000)
         else:
             popup = context.window_manager.invoke_popup(self, width=1000)

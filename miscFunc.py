@@ -179,3 +179,36 @@ def dimensionsFromSelection(self, context, minMaxAvg):
         result = average((_max - _min))
 
     return result
+
+def activateProp(self, context, propName=''):
+
+    addonPrefs = bpy.context.preferences.addons[__package__].preferences
+
+    if not addonPrefs.preventInfiniteRecursion:
+
+        addonPrefs.preventInfiniteRecursion = True
+
+        prop        = getattr(addonPrefs, propName, None)
+        prop_active = getattr(addonPrefs, f'{propName}_active', None)
+
+        if prop_active is not None:
+
+            setattr(addonPrefs, f'{propName}_active', True)
+
+        addonPrefs.preventInfiniteRecursion = False
+
+def deactivateProp(self, context, propName=''):
+    addonPrefs = bpy.context.preferences.addons[__package__].preferences
+
+    if not addonPrefs.preventInfiniteRecursion:
+
+        addonPrefs.preventInfiniteRecursion = True
+
+        prop        = getattr(addonPrefs, propName, None)
+        defaultVal  = self.__annotations__[propName][1]['default']
+
+        if prop is not None:
+
+            setattr(addonPrefs, propName, defaultVal)
+
+        addonPrefs.preventInfiniteRecursion = False

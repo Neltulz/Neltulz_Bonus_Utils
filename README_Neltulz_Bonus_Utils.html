@@ -10,11 +10,11 @@
         <meta name="twitter:card" value="summary">
 
         <!-- Open Graph data -->
-        <meta property="og:title" content="Neltulz - Bonus Utils v1.0.3" />
+        <meta property="og:title" content="Neltulz - Bonus Utils v1.0.4" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.logichaos.com/neltulz_blender_addons/neltulz_bonus_utils/README_Neltulz_Bonus_Utils"/>
         <meta property="og:image" content="https://www.logichaos.com/neltulz_blender_addons/neltulz_bonus_utils/readme_html_files/img/logo.png" />
-        <meta property="og:description" content="Updated: 1/31/2020 - A collection of useful utilities, pie menus, and menus" />
+        <meta property="og:description" content="Updated: 3/13/2020 - A collection of useful utilities, pie menus, and menus" />
 
         <link href="readme_html_files/fontawesome-free-5.10.1-web/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="readme_html_files/css/bootstrap-reboot.min.css">
@@ -72,13 +72,6 @@
 
         <div class="main">
             
-            <!--
-            <picture class="mainAddonImage">
-                <source srcset="readme_html_files/img/logo.webp" type="image/webp">
-                <source srcset="readme_html_files/img/logo.png" type="image/png"> 
-                <img src="readme_html_files/img/logo.png" alt="Logo">
-            </picture>
-            -->
 
             <picture class="mainAddonBanner">
                 <source srcset="readme_html_files/img/banner.jpg" type="image/jpeg">
@@ -86,7 +79,7 @@
             </picture>
 
             <h1 class="pageTitle">
-                <!--Neltulz - Bonus Utils<br>--><span class="versionNum">Version: 1.0.3<br>Updated: 1/31/2020</span>
+                <!--Neltulz - Bonus Utils<br>--><span class="versionNum">Version: 1.0.4<br>Updated: 3/13/2020</span>
             </h1>
 
             <div class="versionAndDownloadBar">
@@ -253,13 +246,13 @@
                         <tr>
                             <td class="hotkey primary">CTRL+SHIFT+Q</td>
                             <td class="result success">Open the <strong>"Modifier Tools"</strong> Pie Menu</td>
-                            <td class="command">ntzbnsutls.modifiertoolspie</td>
+                            <td class="command">view3d.ntzbu_modifier_tools_pie</td>
                             <td class="properties">None</td>
                         </tr>
                         <tr>
                             <td class="hotkey primary">ALT+Q</td>
                             <td class="result success">Open the <strong>"All-in-One Tools"</strong> Popup Menu</td>
-                            <td class="command">ntzbnsutls.aiotoolsettings</td>
+                            <td class="command">view3d.ntzbu_all_in_one_tool_settings</td>
                             <td class="properties">None</td>
                         </tr>
 
@@ -271,7 +264,7 @@
             <h3 id="knownIssues">Known Issues</h3>
 
             <ul>
-                <li>None</li>
+                <li>Modifier Toggle/Enable/Disable/Apply/Remove has problems with linked modifiers on multiple objects - possibly performing the action multiple times unnecessarily.  Will try to resolve soon.</li>
             </ul>
 
             <h3 id="license">License</h3>
@@ -362,26 +355,39 @@
             <h3 id="changelog">Changelog</h3>
 
                 <ul>
-                    <li>2020-01-31
+                    <li><h5>2020-01-31</h5>
+                        <ul>
+                            <li>Improved <mark>add-on preferences</mark> (e.g. Added section for keymaps, object, and mesh related options)</li>
+                            <li>Added a <mark>Group with Empty</mark> operator to easily select options, and group them using an empty.  Autodesk Maya / Industry Professionals will feel at home with this feature.</li>
+                            <li>Added <mark>Smart Unparent</mark> feature which allows you to unparent object(s) one level (unlike Clear parent, which unparents an object all the way to the root).  Smart Unparent can also can <mark>delete orphaned empties</mark>.</li>
+                            <li>Bug Fix: SnapCursor+ <mark>Median</mark> and <mark>Bounding</mark> options did not change the location of the cursor.</li>
+                        </ul>
+                    </li>
+                    <li><h5>2020-01-31</h5>
                         <ul>
                             <li>Added 3D Cursor options to <mark>Adjust</mark>, <mark>Apply</mark>, or <mark>Rotate</mark></li>
                             <li>Added <mark>Snap Cursor+</mark> feature which allows to snap cursor to selected object, face, edge, or vertice with <mark>orientation</mark>.</li>
                         </ul>
                     </li>
-                    <li>2020-01-26
+                    <li><h5>2020-01-26</h5>
                         <ul>
                             <li>Added <mark>Normal Extrude+</mark> feature, which functions similarly to <mark>Offset Faces</mark> but on a Mesh <mark>Face selection</mark> level</li>
                             <li>Added an <mark>All-in-one Tool Settings</mark> popup which contains most tool related options in a convenient popup.</li>
                             <li>Renamed <mark>Offset Faces</mark> to <mark>Offset All Faces</mark></li>
                         </ul>
                     </li>
-                    <li>2020-01-22
+                    <li><h5>2020-01-22</h5>
                         <ul>
                             <li>Added (Work in progress) Subdivide+ feature, which automatically selects newly added edges/vertices after subdividing.</li>
                             <li>Added Offset Faces feature, which uses a solidify modifier to offset faces by a specified amount.</li>
                         </ul>
                     </li>
-                    <li>2020-01-20 - First release!</li>
+                    <li><h5>2020-01-20</h5>
+                        <ul>
+                            <li>First release!</li>
+                        </ul>
+                        
+                    </li>
                 </ul>
 
             <h3 id="links">Links</h3>

@@ -3,7 +3,7 @@ bl_info = {
     "author" : "Neil V. Moore",
     "description" : "A collection of miscellaneous bonus utilities",
     "blender" : (2, 81, 0),
-    "version" : (1, 0, 3),
+    "version" : (1, 0, 4),
     "location" : "View3D",
     "warning" : "",
     "category" : "3D View",
@@ -18,41 +18,55 @@ bl_info = {
 import bpy
 
 #props
-from . props_misc                 import NTZBNSUTLS_props
-from . props_misc                 import NTZBNSUTLS_selcontigedgprops
-from . props_misc                 import NTZBNSUTLS_mdfrtoolsprops
+from . props                      import ntzbu_props
 
 #operators
-from . ot_selcontigedg            import NTZBNSUTLS_OT_selcontigedg
-from . ot_misc                    import NTZBNSUTLS_OT_resetsettings
-from . addon_preferences          import NTZBNSUTLS_OT_addonprefs
-from . ot_delallunselobjs         import NTZBNSUTLS_OT_delallunselobjs
-from . ot_modifiertools           import NTZBNSUTLS_OT_modifiervisibility
-from . ot_modifiertools           import NTZBNSUTLS_OT_applymodifiers
-from . ot_modifiertools           import NTZBNSUTLS_OT_removemodifiers
-from . ot_modifiertools           import NTZBNSUTLS_OT_openmodifiersidebar
-from . ot_aiotoolsettings         import NTZBNSUTLS_OT_aiotoolsettings
-from . ot_subdivideplus           import NTZBNSUTLS_OT_subdivideplus
-from . ot_offsetfaces             import NTZBNSUTLS_OT_offsetfaces
-from . ot_normalextrudeplus       import NTZBNSUTLS_OT_normalextrudeplus
-from . ot_cursor                  import NTZBNSUTLS_OT_adjust3dcursor
-from . ot_cursor                  import NTZBNSUTLS_OT_apply3dcursor
-from . ot_cursor                  import NTZBNSUTLS_OT_rotate3dcursor
-from . ot_cursor                  import NTZBNSUTLS_OT_snapcursorplus
-from . pie_misc                   import NTZBNSUTLS_OT_modifiertoolspie
+from . selcontigedgOt             import VIEW3D_OT_ntzbu_select_contiguous_edges
+
+from . miscOt                     import WM_OT_ntzbu_toggle_section
+from . miscOt                     import VIEW3D_OT_ntzbu_reset_settings
+from . miscOt                     import VIEW3D_OT_ntzbu_toggle_relationship_lines_in_all_3dviews
+
+
+from . addonPreferences           import VIEW3D_OT_ntzbu_addon_prefs
+
+from . delallunselobjsOt          import VIEW3D_OT_ntzbu_delete_all_unselected_objs
+from . groupWithEmptyOt           import VIEW3D_OT_ntzbu_group_with_empty
+from . smartUnparentOt            import VIEW3D_OT_ntzbu_smart_unparent
+
+from . modifiertoolsOt            import VIEW3D_OT_ntzbu_modifier_visibility
+from . modifiertoolsOt            import VIEW3D_OT_ntzbu_apply_modifiers
+from . modifiertoolsOt            import VIEW3D_OT_ntzbu_remove_modifiers
+from . modifiertoolsOt            import VIEW3D_OT_ntzbu_open_modifiers_sidebar
+
+from . aiotoolsettingsOt          import VIEW3D_OT_ntzbu_all_in_one_tool_settings
+from . subdivideplusOt            import VIEW3D_OT_ntzbu_subdivide_plus
+from . offsetfacesOt              import VIEW3D_OT_ntzbu_offset_all_faces
+from . normalextrudeplusOt        import VIEW3D_OT_ntzbu_normal_extrude_plus
+
+from . cursorOt                   import VIEW3D_OT_ntzbu_adjust_3d_cursor
+from . cursorOt                   import VIEW3D_OT_ntzbu_apply_3d_cursor
+from . cursorOt                   import VIEW3D_OT_ntzbu_rotate_3d_cursor
+from . cursorOt                   import VIEW3D_OT_ntzbu_snap_cursor_plus
+
+from . pieMisc                    import VIEW3D_OT_ntzbu_modifier_tools_pie
 
 #panels
-from . pt_misc                    import NTZBNSUTLS_PT_selcontigedgoptions
-from . pt_misc                    import NTZBNSUTLS_PT_modifiertoolsoptions
-from . pt_misc                    import NTZBNSUTLS_PT_sidebarpanel
+from . miscPt                     import VIEW3D_PT_ntzbu_delete_all_unselected_objects_options
+from . miscPt                     import VIEW3D_PT_ntzbu_group_with_empty_options
+from . miscPt                     import VIEW3D_PT_ntzbu_select_contiguous_edges_options
+from . miscPt                     import VIEW3D_PT_ntzbu_modifier_tools_options
+from . miscPt                     import VIEW3D_PT_ntzbu_sidebar_panel
 
 #pies
-from . pie_misc                   import NTZBNSUTLS_MT_modifiertoolspie
+from . pieMisc                    import VIEW3D_MT_ntzbu_modifier_tools_pie
 
 #keymaps
-from . import keymaps
+from .                            import keymaps
 
 PendingDeprecationWarning
+
+wm = bpy.context.window_manager
 
 bDebugModeActive = False
 if bDebugModeActive:
@@ -66,43 +80,48 @@ if bDebugModeActive:
 
 classes = (
     #props
-    NTZBNSUTLS_props,
-    NTZBNSUTLS_selcontigedgprops,
-    NTZBNSUTLS_mdfrtoolsprops,
+    ntzbu_props,
 
     #operators
-    NTZBNSUTLS_OT_selcontigedg,
-    NTZBNSUTLS_OT_resetsettings,
-    NTZBNSUTLS_OT_addonprefs,
-    NTZBNSUTLS_OT_delallunselobjs,
-    NTZBNSUTLS_OT_modifiervisibility,
-    NTZBNSUTLS_OT_applymodifiers,
-    NTZBNSUTLS_OT_removemodifiers,
-    NTZBNSUTLS_OT_openmodifiersidebar,
-    NTZBNSUTLS_OT_aiotoolsettings,
-    NTZBNSUTLS_OT_subdivideplus,
-    NTZBNSUTLS_OT_offsetfaces,
-    NTZBNSUTLS_OT_normalextrudeplus,
-    NTZBNSUTLS_OT_adjust3dcursor,
-    NTZBNSUTLS_OT_apply3dcursor,
-    NTZBNSUTLS_OT_rotate3dcursor,
-    NTZBNSUTLS_OT_snapcursorplus,
-    NTZBNSUTLS_OT_modifiertoolspie,
+    VIEW3D_OT_ntzbu_select_contiguous_edges,
+
+    WM_OT_ntzbu_toggle_section,
+    VIEW3D_OT_ntzbu_reset_settings,
+    VIEW3D_OT_ntzbu_toggle_relationship_lines_in_all_3dviews,
+
+    VIEW3D_OT_ntzbu_delete_all_unselected_objs,
+    VIEW3D_OT_ntzbu_group_with_empty,
+    VIEW3D_OT_ntzbu_smart_unparent,
+    VIEW3D_OT_ntzbu_modifier_visibility,
+    VIEW3D_OT_ntzbu_apply_modifiers,
+    VIEW3D_OT_ntzbu_remove_modifiers,
+    VIEW3D_OT_ntzbu_open_modifiers_sidebar,
+    VIEW3D_OT_ntzbu_all_in_one_tool_settings,
+    VIEW3D_OT_ntzbu_subdivide_plus,
+    VIEW3D_OT_ntzbu_offset_all_faces,
+    VIEW3D_OT_ntzbu_normal_extrude_plus,
+    VIEW3D_OT_ntzbu_adjust_3d_cursor,
+    VIEW3D_OT_ntzbu_apply_3d_cursor,
+    VIEW3D_OT_ntzbu_rotate_3d_cursor,
+    VIEW3D_OT_ntzbu_snap_cursor_plus,
+    VIEW3D_OT_ntzbu_modifier_tools_pie,
 
     #panels
-    NTZBNSUTLS_PT_selcontigedgoptions,
-    NTZBNSUTLS_PT_modifiertoolsoptions,
-    NTZBNSUTLS_PT_sidebarpanel,
+    VIEW3D_PT_ntzbu_delete_all_unselected_objects_options,
+    VIEW3D_PT_ntzbu_group_with_empty_options,
+    VIEW3D_PT_ntzbu_select_contiguous_edges_options,
+    VIEW3D_PT_ntzbu_modifier_tools_options,
+    VIEW3D_PT_ntzbu_sidebar_panel,
 
     #pies
-    NTZBNSUTLS_MT_modifiertoolspie,
+    VIEW3D_MT_ntzbu_modifier_tools_pie,
 )
 
 # -----------------------------------------------------------------------------
 #    Register classes from the classes list
 # -----------------------------------------------------------------------------    
 
-addon_keymaps = []
+addonKeymaps = {}
 
 #vscode pme workaround from iceythe (part 2 of 2)
 def _reg():
@@ -114,20 +133,25 @@ def _reg():
 
 def register():
     from bpy.utils import register_class
+
     for cls in classes:
         register_class(cls)
 
-    # update panel name
+    #register preferences last:
+    register_class(VIEW3D_OT_ntzbu_addon_prefs)
     prefs = bpy.context.preferences.addons[__name__].preferences
-    addon_preferences.update_panel(prefs, bpy.context)
+
+    
+    # update panel name
+    addonPreferences.update_panel(prefs, bpy.context)
+    
 
     #add keymaps from keymaps.py
-    keymaps.regKM(addon_keymaps)
+    keymaps.regKM(addonKeymaps, wm)
+
 
     #add property group to the scene
-    bpy.types.Scene.ntzbnsutls                  = bpy.props.PointerProperty(type=NTZBNSUTLS_props  )
-    bpy.types.Scene.ntzbnsutls_selcontigedg     = bpy.props.PointerProperty(type=NTZBNSUTLS_selcontigedgprops)
-    bpy.types.Scene.ntzbnsutls_mdfrtools        = bpy.props.PointerProperty(type=NTZBNSUTLS_mdfrtoolsprops)
+    bpy.types.Scene.ntzbnsutls                  = bpy.props.PointerProperty(type=ntzbu_props  )
 
     #vscode pme workaround from iceythe (part 1 of 2)
     #must be appended to def register() so that it is the last thing that executes
@@ -141,11 +165,15 @@ def register():
 
 def unregister():
     from bpy.utils import unregister_class
+
+    #unregister preferences first
+    unregister_class(VIEW3D_OT_ntzbu_addon_prefs)
+
     for cls in reversed(classes):
         unregister_class(cls)
 
     #remove keymaps
-    keymaps.unregKM(addon_keymaps)
+    keymaps.unregKM(addonKeymaps, wm)
 
 
 

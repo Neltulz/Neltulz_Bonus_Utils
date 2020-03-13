@@ -1,40 +1,42 @@
 import bpy
-from . props_misc import NTZBNSUTLS_mdfrtoolsprops
 
 # -----------------------------------------------------------------------------
 #    Keymaps (For Register)
 # -----------------------------------------------------------------------------    
 
-def regKM(addon_keymaps):
-    pass
-    wm = bpy.context.window_manager
+def regKM(addonKeymaps, wm):
+
+    kc = wm.keyconfigs.addon.keymaps
 
 
+    #------------------------------3d View ----------------------------------------------------------------------------
 
-    #------------------------------3d View (Generic)----------------------------------------------------------------------------
+    # fetch keymap
+    km = kc.get("3D View")
 
-    km = wm.keyconfigs.addon.keymaps.new(name = "3D View Generic", space_type="VIEW_3D")
+    # create a list for keymap items for current km
+    addonKeymaps[km] = []
 
-    kmi = km.keymap_items.new("ntzbnsutls.modifiertoolspie", type='Q', value='PRESS',
+    #km = wm.keyconfigs.addon.keymaps.new(name = "3D View", space_type="VIEW_3D")
+
+    kmi = km.keymap_items.new("view3d.ntzbu_modifier_tools_pie", type='Q', value='PRESS',
                               ctrl=True, shift=True, alt=False)
 
-    #add list of keymaps
-    addon_keymaps.append(km)
+    # add keymap item to list
+    addonKeymaps[km].append(kmi)
 
-    #---------------------------------------------------------------------------------------------------------------------------
 
-    km = wm.keyconfigs.addon.keymaps.new(name = "3D View", space_type="VIEW_3D")
+    #km = wm.keyconfigs.addon.keymaps.new(name = "3D View", space_type="VIEW_3D")
 
-    kmi = km.keymap_items.new("ntzbnsutls.aiotoolsettings", type='Q', value='PRESS',
+    kmi = km.keymap_items.new("view3d.ntzbu_all_in_one_tool_settings", type='Q', value='PRESS',
                               ctrl=False, shift=False, alt=True)
 
-    #add list of keymaps
-    addon_keymaps.append(km)
+    # add keymap item to list
+    addonKeymaps[km].append(kmi)
 
-def unregKM(addon_keymaps):
+def unregKM(addonKeymaps, wm):
     # handle the keymap
-    wm = bpy.context.window_manager
-    for km in addon_keymaps:
-        wm.keyconfigs.addon.keymaps.remove(km)
-    # clear the list
-    addon_keymaps.clear()
+    for km, km_list in addonKeymaps.items():
+        for kmi in km_list:
+            km.keymap_items.remove(kmi)
+    addonKeymaps.clear()

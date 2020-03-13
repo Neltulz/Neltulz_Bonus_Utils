@@ -5,26 +5,21 @@
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 import bpy
-from . import misc_functions
+from . import miscFunc
 
 from bpy.props import (StringProperty, BoolProperty, IntProperty, FloatProperty, FloatVectorProperty, EnumProperty, PointerProperty)
 from bpy.types import (Operator)
 
 
-class NTZBNSUTLS_OT_modifiervisibility(Operator):
+class VIEW3D_OT_ntzbu_modifier_visibility(Operator):
     """Tooltip"""
-    bl_idname = "ntzbnsutls.modifiervisibility"
-    bl_label = "Neltulz - Bonus Utils : Modifier Visibility"
-    bl_description = "Enables/Disables Modifiers"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_idname           = "view3d.ntzbu_modifier_visibility"
+    bl_label            = "NTZBU : Modifier Visibility"
+    bl_description      = "Enables/Disables Modifiers"
+    bl_options          = {'REGISTER', 'UNDO'}
 
     tooltip : StringProperty(options={'HIDDEN'})
 
-    bForcePanelOptions : BoolProperty(
-        name="Force Panel Options",
-        description='Gets all of the operator properties from the sidebar panel options.  This will override any settings in the user customized keymap.',
-        default = False
-    )
 
     enableDisableToggle_List = [
         ("ENABLE",  "Enable",   "Enable modifiers",  "", 0),
@@ -156,20 +151,20 @@ class NTZBNSUTLS_OT_modifiervisibility(Operator):
             ["reset_affect", ["affect"] ],
         ]
 
-        misc_functions.resetOperatorProps(self, context, propsToReset)
+        miscFunc.resetOperatorProps(self, context, propsToReset)
 
         scn = context.scene
 
         objs = None #declare
 
         if self.affect == "SEL":
-            objs = misc_functions.getSelObjs(self, context)
+            objs = miscFunc.getSelObjs(self, context)
 
         elif self.affect == "ALL":
-            objs = misc_functions.getScnObjs(self, context)
+            objs = miscFunc.getScnObjs(self, context)
 
         elif self.affect == "UNSEL":
-            objs = misc_functions.getUnselObjs(self, context)
+            objs = miscFunc.getUnselObjs(self, context)
 
 
         
@@ -205,8 +200,6 @@ class NTZBNSUTLS_OT_modifiervisibility(Operator):
 
                     modifier.show_on_cage = boolResult
         
-        #final step:
-        self.bForcePanelOptions = False
 
         return {'FINISHED'}
     # END execute()
@@ -214,21 +207,6 @@ class NTZBNSUTLS_OT_modifiervisibility(Operator):
     
     def invoke(self, context, event):
         scn = context.scene
-        
-        if self.bForcePanelOptions:
-
-            if scn.ntzbnsutls_mdfrtools.useCustomModifierVisibilitySettings == "CUSTOM":
-                
-                #prop list
-                propList = ['render', 'realtime', 'editmode', "cage"]
-
-                for prop in propList:
-                    
-                    #get the value of the scene property
-                    scnPropVal = getattr(scn.ntzbnsutls_mdfrtools, prop)
-
-                    #set the value of the operator property to the value of the scene property
-                    setattr(self, prop, scnPropVal)
 
         if event.ctrl:
             self.affect = "UNSEL"
@@ -245,18 +223,13 @@ class NTZBNSUTLS_OT_modifiervisibility(Operator):
 
 # END Operator()
 
-class NTZBNSUTLS_OT_applymodifiers(Operator):
+class VIEW3D_OT_ntzbu_apply_modifiers(Operator):
     """Tooltip"""
-    bl_idname = "ntzbnsutls.applymodifiers"
-    bl_label = "Neltulz - Bonus Utils : Apply Modifiers"
-    bl_description = "Applies Modifiers.  Default: Selected Objects.  SHIFT: All Objects.  CTRL: Unselected objects"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_idname           = "view3d.ntzbu_apply_modifiers"
+    bl_label            = "NTZBU : Apply Modifiers"
+    bl_description      = "Applies Modifiers.  Default: Selected Objects.  SHIFT: All Objects.  CTRL: Unselected objects"
+    bl_options          = {'REGISTER', 'UNDO'}
 
-    bForcePanelOptions : BoolProperty (
-        name="Force Panel Options",
-        description='Gets all of the operator properties from the sidebar panel options.  This will override any settings in the user customized keymap.',
-        default = False
-    )
 
     affect_List = [
         ("SEL",       "Selected",   "", "", 0),
@@ -332,20 +305,20 @@ class NTZBNSUTLS_OT_applymodifiers(Operator):
         ]
         
 
-        misc_functions.resetOperatorProps(self, context, propsToReset)
+        miscFunc.resetOperatorProps(self, context, propsToReset)
 
         scn = context.scene
 
         objs = None #declare
 
         if self.affect == "SEL":
-            objs = misc_functions.getSelObjs(self, context)
+            objs = miscFunc.getSelObjs(self, context)
 
         elif self.affect == "ALL":
-            objs = misc_functions.getScnObjs(self, context)
+            objs = miscFunc.getScnObjs(self, context)
 
         elif self.affect == "UNSEL":
-            objs = misc_functions.getUnselObjs(self, context)
+            objs = miscFunc.getUnselObjs(self, context)
 
 
         def applyModifier(obj):
@@ -385,8 +358,6 @@ class NTZBNSUTLS_OT_applymodifiers(Operator):
         #set original active object as the active object
         bpy.context.view_layer.objects.active = activeObjAtBegin
 
-        #final step:
-        self.bForcePanelOptions = False
 
         return {'FINISHED'}
     # END execute()
@@ -395,22 +366,6 @@ class NTZBNSUTLS_OT_applymodifiers(Operator):
 
     def invoke(self, context, event):
         scn = context.scene
-
-        if self.bForcePanelOptions:
-
-            if scn.ntzbnsutls_mdfrtools.useCustomModifierVisibilitySettings == "CUSTOM":
-                
-                #prop list
-                propList = ['apply']
-
-                for prop in propList:
-                    
-                    #get the value of the scene property
-                    scnPropVal = getattr(scn.ntzbnsutls_mdfrtools, prop)
-
-                    #set the value of the operator property to the value of the scene property
-                    if scnPropVal != "UNSET":
-                        setattr(self, prop, scnPropVal)
 
         if event.ctrl:
             self.affect = "UNSEL"
@@ -429,12 +384,12 @@ class NTZBNSUTLS_OT_applymodifiers(Operator):
 # END Operator()
 
 
-class NTZBNSUTLS_OT_removemodifiers(Operator):
+class VIEW3D_OT_ntzbu_remove_modifiers(Operator):
     """Tooltip"""
-    bl_idname = "ntzbnsutls.removemodifiers"
-    bl_label = "Neltulz - Bonus Utils : Remove Modifiers"
-    bl_description = "Remove Modifiers.  Default: Selected Objects.  SHIFT: All Objects.  CTRL: Unselected objects"
-    bl_options = {'REGISTER', 'UNDO'}
+    bl_idname           = "view3d.ntzbu_remove_modifiers"
+    bl_label            = "NTZBU : Remove Modifiers"
+    bl_description      = "Remove Modifiers.  Default: Selected Objects.  SHIFT: All Objects.  CTRL: Unselected objects"
+    bl_options          = {'REGISTER', 'UNDO'}
 
     affect_List = [
         ("SEL",       "Selected",   "", "", 0),
@@ -460,19 +415,19 @@ class NTZBNSUTLS_OT_removemodifiers(Operator):
             ["reset_affect", ["affect"] ],
         ]
 
-        misc_functions.resetOperatorProps(self, context, propsToReset)
+        miscFunc.resetOperatorProps(self, context, propsToReset)
         scn = context.scene
 
         objs = None #declare
 
         if self.affect == "SEL":
-            objs = misc_functions.getSelObjs(self, context)
+            objs = miscFunc.getSelObjs(self, context)
 
         elif self.affect == "ALL":
-            objs = misc_functions.getScnObjs(self, context)
+            objs = miscFunc.getScnObjs(self, context)
 
         elif self.affect == "UNSEL":
-            objs = misc_functions.getUnselObjs(self, context)
+            objs = miscFunc.getUnselObjs(self, context)
 
 
         
@@ -481,8 +436,6 @@ class NTZBNSUTLS_OT_removemodifiers(Operator):
             for modifier in obj.modifiers:
                 obj.modifiers.remove(modifier)
 
-        #final step:
-        self.bForcePanelOptions = False
 
         return {'FINISHED'}
     # END execute()
@@ -524,12 +477,12 @@ class NTZBNSUTLS_OT_removemodifiers(Operator):
 
 
 
-class NTZBNSUTLS_OT_openmodifiersidebar(Operator):
+class VIEW3D_OT_ntzbu_open_modifiers_sidebar(Operator):
     """Tooltip"""
-    bl_idname = "ntzbnsutls.openmodifiersidebar"
-    bl_label = "Neltulz - Bonus Utils : Open Modifier Sidebar"
-    bl_description = 'Opens the "Modifiers" sidebar'
-    bl_options = {'REGISTER', 'UNDO',
+    bl_idname           = "view3d.ntzbu_open_modifiers_sidebar"
+    bl_label            = "NTZBU : Open Modifier Sidebar"
+    bl_description      = 'Opens the "Modifiers" sidebar'
+    bl_options          = {'REGISTER', 'UNDO',
         #'PRESET',
     }
 

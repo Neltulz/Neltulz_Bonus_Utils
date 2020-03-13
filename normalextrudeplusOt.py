@@ -6,17 +6,17 @@
 
 import bpy
 import bmesh
-from .              import misc_functions
-from .              import lay_misc
+from .              import miscFunc
+from .              import miscLay
 
 from bpy.props import (StringProperty, BoolProperty, IntProperty, FloatProperty, FloatVectorProperty, EnumProperty, PointerProperty)
 from bpy.types import (Panel, Operator, AddonPreferences, PropertyGroup)
 
-class NTZBNSUTLS_OT_normalextrudeplus(Operator):
-    bl_idname = "ntzbnsutls.normalextrudeplus"
-    bl_label = "Neltulz - Bonus Utils : Normal Extrude+"
-    bl_description = 'An alternate (in some situations, more accurate) version of face normal extrusion.  Use this to replace Blender\'s "Extrude Along Normals"'
-    bl_options = {'REGISTER', 'UNDO',
+class VIEW3D_OT_ntzbu_normal_extrude_plus(Operator):
+    bl_idname           = "view3d.ntzbu_normal_extrude_plus"
+    bl_label            = "NTZBU : Normal Extrude+"
+    bl_description      = 'An alternate (in some situations, more accurate) version of face normal extrusion.  Use this to replace Blender\'s "Extrude Along Normals"'
+    bl_options          = {'REGISTER', 'UNDO',
     #'PRESET'
     }
 
@@ -172,7 +172,7 @@ class NTZBNSUTLS_OT_normalextrudeplus(Operator):
             else:
                 dissolveEdgesWrapper = layout
 
-            lay_misc.createShowHide(self, context, None, None, "showDissolveEdgesSection", "dissolveEdges", "Dissolve Edges", dissolveEdgesWrapper)
+            miscLay.createShowHide(self, context, None, None, "showDissolveEdgesSection", "dissolveEdges", "Dissolve Edges", dissolveEdgesWrapper)
 
             if self.showDissolveEdgesSection:
 

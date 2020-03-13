@@ -6,17 +6,17 @@
 
 import bpy
 import bmesh
-from .              import misc_functions
-from .              import lay_misc
+from .              import miscFunc
+from .              import miscLay
 
 from bpy.props import (StringProperty, BoolProperty, IntProperty, FloatProperty, FloatVectorProperty, EnumProperty, PointerProperty)
 from bpy.types import (Panel, Operator, AddonPreferences, PropertyGroup)
 
-class NTZBNSUTLS_OT_offsetfaces(Operator):
-    bl_idname = "ntzbnsutls.offsetfaces"
-    bl_label = "Neltulz - Bonus Utils : Offset All Faces"
-    bl_description = "Offset All Faces using a solidify modifier"
-    bl_options = {'REGISTER', 'UNDO',
+class VIEW3D_OT_ntzbu_offset_all_faces(Operator):
+    bl_idname           = "view3d.ntzbu_offset_all_faces"
+    bl_label            = "NTZBU : Offset All Faces"
+    bl_description      = "Offset All Faces using a solidify modifier"
+    bl_options          = {'REGISTER', 'UNDO',
     #'PRESET'
     }
 
@@ -61,13 +61,13 @@ class NTZBNSUTLS_OT_offsetfaces(Operator):
                     if self.objectModeAtBegin == "EDIT":
                         bpy.ops.object.mode_set(mode='OBJECT')
 
-                    neltulzOffsetModifier = misc_functions.findModifier(self, context, activeObjAtBegin, "Neltulz - Offset Faces") #declare
+                    neltulzOffsetModifier = miscFunc.findModifier(self, context, activeObjAtBegin, "Neltulz - Offset Faces") #declare
 
 
                     if neltulzOffsetModifier is None:
                         activeObjAtBegin.modifiers.new(name="Neltulz - Offset Faces", type='SOLIDIFY')
 
-                        neltulzOffsetModifier = misc_functions.findModifier(self, context, activeObjAtBegin, "Neltulz - Offset Faces")
+                        neltulzOffsetModifier = miscFunc.findModifier(self, context, activeObjAtBegin, "Neltulz - Offset Faces")
                     
                     if self.offsetAmount > 0:
                         use_flip_normals = False
