@@ -91,11 +91,11 @@ class VIEW3D_OT_ntzbu_adjust_3d_cursor(Operator):
 
         obj = context.object
 
-        miscLay.createPropOLD(self, context, None, True, "Display As", self, "emptyDisplayType", 1, 5, 20, "RIGHT", "EXPAND", "",  False, False, lay)
+        miscLay.createPropOLD(self, context, labelText='Display As', data=self, propItem='emptyDisplayType', layout=lay)
 
         lay.separator()
 
-        miscLay.createPropOLD(self, context, None, True, "Size",       self, "size",             1, 5, 20, "RIGHT", "EXPAND", "",  False, False, lay)
+        miscLay.createPropOLD(self, context, labelText='Size', data=self, propItem='size', layout=lay)
 
     #END draw()
 
@@ -125,9 +125,9 @@ class VIEW3D_OT_ntzbu_apply_3d_cursor(Operator):
 
         try:
             #try to determine objectMode
-            objectModeAtBegin = bpy.context.object.mode
+            objModeAtBegin = bpy.context.object.mode
         except:
-            objectModeAtBegin = "OBJECT"
+            objModeAtBegin = "OBJECT"
 
         scn.cursor.rotation_mode = 'XYZ'
 
@@ -158,7 +158,7 @@ class VIEW3D_OT_ntzbu_apply_3d_cursor(Operator):
 
             bpy.data.objects.remove(cursorAdjustEmpty)
 
-            if objectModeAtBegin == 'EDIT':
+            if objModeAtBegin == 'EDIT':
                 bpy.ops.object.mode_set(mode='EDIT')
         
         return {'FINISHED'}
@@ -311,15 +311,16 @@ class VIEW3D_OT_ntzbu_snap_cursor_plus(Operator):
         
         try:
             #try to determine objectMode
-            objectModeAtBegin = bpy.context.object.mode
+            objModeAtBegin = bpy.context.object.mode
         except:
-            objectModeAtBegin = "OBJECT"
+            objModeAtBegin = "OBJECT"
 
         activeObjAtBegin = bpy.context.view_layer.objects.active
         selObjs = context.selected_objects
+        numObjsWithVertsSel = 0 #declare
 
 
-        if objectModeAtBegin == "OBJECT":
+        if objModeAtBegin == "OBJECT":
             
             #if there is no active object, yet there are selected objects, ensure the first selected object becomes the active object
             if (activeObjAtBegin == None) or (not activeObjAtBegin in selObjs):
@@ -327,12 +328,11 @@ class VIEW3D_OT_ntzbu_snap_cursor_plus(Operator):
                     activeObjAtBegin = selObjs[0]
                     bpy.context.view_layer.objects.active = activeObjAtBegin
 
-        elif objectModeAtBegin == "EDIT":
+        elif objModeAtBegin == "EDIT":
 
             if activeObjAtBegin.type == "MESH":
 
                 #determine number of objects with vertex selections, and create a list with only those objects
-                numObjsWithVertsSel = 0 #declare
                 objsWithVertSel = set() #declare
                 for obj in selObjs:
 
@@ -359,97 +359,39 @@ class VIEW3D_OT_ntzbu_snap_cursor_plus(Operator):
 
         if self.useLocation:
 
-            transformPivotPointAtBegin = str(scn.tool_settings.transform_pivot_point)
-
-            def getLocationFromBoundingBoxCenter():
-
-                if activeObjAtBegin.type == "MESH":
-
-                    if objectModeAtBegin == "OBJECT":
-                        
-                        if transformPivotPointAtBegin == "ACTIVE_ELEMENT":
-                            bpy.ops.view3d.snap_cursor_to_active()
-
-                        else:
-                            bpy.ops.view3d.snap_cursor_to_selected()
-                    else:
-
-                        if numObjsWithVertsSel == 1:  
-                            bm = bmesh.from_edit_mesh(activeObjAtBegin.data)
-                            mat = activeObjAtBegin.matrix_world.copy()
-
-                            vco = [v.co for v in bm.verts if v.select]
-                            arr = np.array(vco).reshape(len(vco), 3)
-
-                            center = mat @ Vector((arr.min(axis=0) + arr.max(axis=0)) * 0.5)
-
-                            scn.cursor.location = center
-                        
-                        if numObjsWithVertsSel >= 2:
-                            bpy.ops.view3d.snap_cursor_to_selected() #sloppy fallback
-                
-                else:
-                    if transformPivotPointAtBegin == "ACTIVE_ELEMENT":
-                        bpy.ops.view3d.snap_cursor_to_active()
-
-                    else:
-                        bpy.ops.view3d.snap_cursor_to_selected()
-
-
-            def getLocationFromMedianPoint():
-
-                if activeObjAtBegin.type == "MESH":
-
-                    if objectModeAtBegin == "OBJECT":
-                        
-                        if transformPivotPointAtBegin == "ACTIVE_ELEMENT":
-                            bpy.ops.view3d.snap_cursor_to_active()
-
-                        else:
-                            bpy.ops.view3d.snap_cursor_to_selected()
-                    else:
-                        bpy.ops.view3d.snap_cursor_to_selected()
-
-                else:
-                    if transformPivotPointAtBegin == "ACTIVE_ELEMENT":
-                        bpy.ops.view3d.snap_cursor_to_active()
-
-                    else:
-                        bpy.ops.view3d.snap_cursor_to_selected()
-
-
+            tformPivotAtBegin = str(scn.tool_settings.transform_pivot_point)
 
             if self.location == "TFORMPIVOT":
                 
-                if transformPivotPointAtBegin == "BOUNDING_BOX_CENTER":
-                    getLocationFromBoundingBoxCenter()
+                if tformPivotAtBegin == "BOUNDING_BOX_CENTER":
+                    miscFunc.snapCursorToBoundingBoxCenter(self, context, activeObj=activeObjAtBegin, objMode=objModeAtBegin, tformPivotPoint=tformPivotAtBegin, numObjsWithVertsSel=numObjsWithVertsSel)
 
-                elif transformPivotPointAtBegin == "MEDIAN_POINT":
-                    getLocationFromMedianPoint()
+                elif tformPivotAtBegin == "MEDIAN_POINT":
+                    miscFunc.snapCursorToMedianPoint(self, context, activeObj=activeObjAtBegin, objMode=objModeAtBegin, tformPivotPoint=tformPivotAtBegin)
 
-                elif transformPivotPointAtBegin == "ACTIVE_ELEMENT":
+                elif tformPivotAtBegin == "ACTIVE_ELEMENT":
                     bpy.ops.view3d.snap_cursor_to_active()
 
                 else:
-                    getLocationFromMedianPoint() #all other situations (e.g. individual origins, cursor, etc)
+                    miscFunc.snapCursorToMedianPoint(self, context, activeObj=activeObjAtBegin, objMode=objModeAtBegin, tformPivotPoint=tformPivotAtBegin) #all other situations (e.g. individual origins, cursor, etc)
 
             elif self.location == "DEFAULT":
                 bpy.ops.view3d.snap_cursor_to_selected()
 
             elif self.location == "BOUNDING_BOX_CENTER":
                 scn.tool_settings.transform_pivot_point = self.location
-                getLocationFromBoundingBoxCenter()
-                scn.tool_settings.transform_pivot_point = transformPivotPointAtBegin #reset
+                miscFunc.snapCursorToBoundingBoxCenter(self, context, activeObj=activeObjAtBegin, objMode=objModeAtBegin, tformPivotPoint=tformPivotAtBegin, numObjsWithVertsSel=numObjsWithVertsSel)
+                scn.tool_settings.transform_pivot_point = tformPivotAtBegin #reset
 
             elif self.location == "MEDIAN_POINT":
                 scn.tool_settings.transform_pivot_point = self.location
-                getLocationFromMedianPoint()
-                scn.tool_settings.transform_pivot_point = transformPivotPointAtBegin #reset
+                miscFunc.snapCursorToMedianPoint(self, context, activeObj=activeObjAtBegin, objMode=objModeAtBegin, tformPivotPoint=tformPivotAtBegin)
+                scn.tool_settings.transform_pivot_point = tformPivotAtBegin #reset
 
             elif self.location == "ACTIVE_ELEMENT":
                 scn.tool_settings.transform_pivot_point = self.location
                 bpy.ops.view3d.snap_cursor_to_active()
-                scn.tool_settings.transform_pivot_point = transformPivotPointAtBegin #reset
+                scn.tool_settings.transform_pivot_point = tformPivotAtBegin #reset
 
             elif self.location == "WORIGIN":
                 scn.cursor.location = (0,0,0)
@@ -462,6 +404,10 @@ class VIEW3D_OT_ntzbu_snap_cursor_plus(Operator):
         #-----------------------------------------------------------------------------------------------------------------------------------------------
 
         if self.useOrientation:
+            
+            rotationModeAtBegin = context.scene.cursor.rotation_mode #store so it can be reset later
+            #Force rotation_mode to be XYZ in case the user changed it or another add-on changed it
+            context.scene.cursor.rotation_mode = 'XYZ'
 
             transformOrientation = scn.transform_orientation_slots[0]
 
@@ -534,14 +480,15 @@ class VIEW3D_OT_ntzbu_snap_cursor_plus(Operator):
 
             elif self.orientation == "VIEW":
                 cursorRot = getRotFromView()
-
+            
             scn.cursor.rotation_euler = cursorRot
+
+            context.scene.cursor.rotation_mode = rotationModeAtBegin #reset
                 
         else:
             scn.cursor.rotation_euler = self.cursorRotationAtInvoke
 
-        #bpy.context.view_layer.objects.active = activeObjAtBegin #final step - if the active object was changed at any point, set the original active obj back to the active obj at begin
-
+        
         return {'FINISHED'}
     #END execute()
 

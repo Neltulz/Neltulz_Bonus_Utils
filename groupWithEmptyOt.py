@@ -19,6 +19,12 @@ class VIEW3D_OT_ntzbu_group_with_empty(Operator):
     bl_description      = "Parent a selection of objects to an invisible empty so that they may be moved/rotated/scaled similar to how Autodesk Maya groups objects"
     bl_options          = {'REGISTER', 'UNDO'}
 
+    bUseOverridesFromAddonPrefs : BoolProperty(
+        name="Use Overrides from Add-on Preferences",
+        description='Gets operator properties from the addon-preferences.  This will override any settings in the user customized keymap.  If you want to prevent the addon preferences from setting your operator properties, set this to False',
+        default = True
+    )
+
     modeAtBegin         = "OBJECT"
     selObjNames         = []
     cursorLocAtBegin    = None
@@ -30,21 +36,24 @@ class VIEW3D_OT_ntzbu_group_with_empty(Operator):
         default         = False,
     )
 
+    reset_emptyName : BoolProperty( name = 'Reset "Empty Name"', default = False )
+    emptyName : StringProperty (
+        name        = 'Empty Name',
+        default     = 'Group',
+    )
+
     emptyLocation_List = [
         ("MEDIAN_POINT",             "Median",         "Median Point",          "", 0),
-        ("BOUNDING_BOX_CENTER",      "Bounding",       "Bounding Box Center",   "", 1),
+        ("BOUNDING_BOX_CENTER",      "Bound",          "Bounding Box Center",   "", 1),
         ("ACTIVE_ELEMENT",           "Active",         "Active Element",        "", 2),
         ("WORIGIN",                  "Origin",         "World Orign",           "", 3),
     ]
 
+    reset_emptyLocation : BoolProperty( name = 'Reset "Empty Location"', default = False )
     emptyLocation : EnumProperty (
         items       = emptyLocation_List,
         name        = "Empty Location",
         default     = "MEDIAN_POINT",
-    )
-
-    emptyName : StringProperty (
-        default     = "Group",
     )
 
     emptySize_List = [
@@ -53,10 +62,11 @@ class VIEW3D_OT_ntzbu_group_with_empty(Operator):
         ("0.0001", "0.0001",    "",   "", 2),
     ]
 
+    reset_emptySize : BoolProperty( name = 'Reset "Empty Size"', default = False )
     emptySize : EnumProperty (
         items       = emptySize_List,
         name        = "Empty Location",
-        default     = "0.0001",
+        default     = "0.01",
     )
 
     @classmethod
@@ -66,18 +76,26 @@ class VIEW3D_OT_ntzbu_group_with_empty(Operator):
     def invoke(self, context, event):
 
         addonPrefs = context.preferences.addons[__package__].preferences
-
         scn = context.scene
 
+        # BEGIN Retreive Operator properties from addon preferences
+        opPropNameList = ['emptyName', 'emptyLocation', 'emptySize']
+        miscFunc.retreive_op_props_from_addonPrefs(self, context, addonPrefs=addonPrefs, opPropNameList=opPropNameList, opPropPrefix='groupWithEmpty_')
+        # END Retreive Operator properties from addon preferences
+        
+        #EXPAND properties?
         if addonPrefs.groupWithEmpty_showOperatorOptions == 'EXPAND':
             self.showOperatorOptions = True
         else:
             self.showOperatorOptions = False
 
+        #store cursor location at begin
         self.cursorLocAtBegin = mathutils.Vector(scn.cursor.location)
         
+        #store mode at begin
         self.modeAtBegin = context.mode
 
+        #store names of selected objects at begin
         self.selObjNames.clear()
         for obj in bpy.context.selected_objects:
             self.selObjNames.append(obj.name)
@@ -92,44 +110,79 @@ class VIEW3D_OT_ntzbu_group_with_empty(Operator):
             box = lay.box().column(align=True)
 
             box.label(text="Empty Location:")
-            row = box.row(align=True)
-            row.prop(self, 'emptyLocation', expand=True)
+            emptyLocation_row = box.row(align=True)
+            emptyLocation_row.prop(self, "emptyLocation", expand=True)
+            emptyLocation_row.separator()
+            resetBtn = emptyLocation_row.row(align=True)
+            resetBtn.active = False
+            resetBtn.prop(self, "reset_emptyLocation", toggle=True, text="", icon="LOOP_BACK", emboss=False)
 
             box.separator()
 
             box.label(text="Empty Size:")
-            row = box.row(align=True)
-            row.prop(self, 'emptySize', expand=True)
+            emptySize_row = box.row(align=True)
+            emptySize_row.prop(self, "emptySize", expand=True)
+            emptySize_row.separator()
+            resetBtn = emptySize_row.row(align=True)
+            resetBtn.active = False
+            resetBtn.prop(self, "reset_emptySize", toggle=True, text="", icon="LOOP_BACK", emboss=False)
 
             lay.separator()
 
-        row = lay.row(align=True)
-        row.scale_y = 1.25
-        row.prop(self, 'emptyName', text='')
 
-        row.separator()
+        emptyName_row = lay.row(align=True)
+        emptyName_row.scale_y = 1.25
+        emptyName_row.prop(self, "emptyName", text='')
+        emptyName_row.separator()
+        resetBtn = emptyName_row.row(align=True)
+        resetBtn.active = False
+        resetBtn.prop(self, "reset_emptyName", toggle=True, text="", icon="LOOP_BACK", emboss=False)
+
+        emptyName_row.separator()
 
         if self.showOperatorOptions:
             icon = 'TRIA_UP'
         else:
             icon = 'TRIA_RIGHT'
 
-        row.prop(self, 'showOperatorOptions', text='', icon=icon)
+        emptyName_row.prop(self, 'showOperatorOptions', text='', icon=icon)
 
 
     # END draw()
 
     def execute(self, context):
-        #ensure one of the selected objects is an active object
-        if context.view_layer.objects.active is None:
-            if len(context.selected_objects) > 0:
-                context.view_layer.objects.active = context.selected_objects[0]
+        
+        # BEGIN Reset props if user clicked any "Reset" button in the operator adjustment panel at the lower left corner of the 3d viewport
+        # ------------------------------------------------------------------------------------------------------------------------------------
+        propsToReset = [
+            ["reset_emptyName",         ["emptyName"]       ],
+            ["reset_emptyLocation",     ["emptyLocation"]   ],
+            ["reset_emptySize",         ["emptySize"]       ],
+        ]
+
+        miscFunc.resetOperatorProps(self, context, propsToReset)
+        # ------------------------------------------------------------------------------------------------------------------------------------
+        # END Reset props
+        
+        addonPrefs = context.preferences.addons[__package__].preferences
+        scn = context.scene
+
+        # BEGIN ensure one of the selected objects is an active object
+        # ------------------------------------------------------------
+        activeObj = context.view_layer.objects.active
+        selObjs = context.selected_objects
+
+        if len(selObjs) > 0:
+            if (activeObj is None) or (not activeObj in selObjs):
+                context.view_layer.objects.active = selObjs[0]
+        # ------------------------------------------------------------
+        # END ensure active obj
+
+
 
         #store name of active object
         self.activeObjName = f'{context.view_layer.objects.active.name}'
 
-        #store scn
-        scn = context.scene
 
         #if mode is 'OBJECT'
         if self.modeAtBegin == 'OBJECT':
@@ -164,7 +217,7 @@ class VIEW3D_OT_ntzbu_group_with_empty(Operator):
                 newEmpty.location = (0,0,0)
             
             #set empty display size
-            newEmpty.empty_display_size = eval(self.emptySize)
+            newEmpty.empty_display_size = float(self.emptySize)
 
             #store the parent of the active object if one exists
             childObjLastParent = context.view_layer.objects.active.parent
@@ -183,6 +236,16 @@ class VIEW3D_OT_ntzbu_group_with_empty(Operator):
             if childObjLastParent is not None:
                 newEmpty.parent = childObjLastParent
                 newEmpty.matrix_parent_inverse = childObjLastParent.matrix_world.inverted()
+
+            '''
+            # NOTE: CURRENTLY BROKEN/NOT WORKING AND DON'T KNOW WHY.
+            #    Find and Expand selected objects in each outliner
+            # -----------------------------------------------------------------------------
+
+            # expand outliner
+            activeObj = context.view_layer.objects.active
+            miscFunc.expand_selected_objs_in_outliner(self, context, selObjs=[activeObj], activeObj=activeObj)
+            '''
             
             #reset cursor location
             scn.cursor.location = self.cursorLocAtBegin
@@ -190,7 +253,7 @@ class VIEW3D_OT_ntzbu_group_with_empty(Operator):
         else:
             self.report({'INFO'}, 'Unsupported mode detected.  Please use "Object Mode".' )
         
-        
+
         return {'FINISHED'}
     # END execute()
 

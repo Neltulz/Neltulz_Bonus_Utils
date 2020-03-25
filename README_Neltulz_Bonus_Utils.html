@@ -47,7 +47,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE." />
 <link id="faviconLink" rel="shortcut icon" href="favicon.ico">
-<title>Neltulz - Bonus Utils — Updated 2020-03-24</title>
+<title>Neltulz - Bonus Utils — Updated 2020-03-25</title>
 <!--~~ This is a Tiddlywiki file. The points of interest in the file are marked with this pattern ~~-->
 
 <!--~~ Raw markup ~~-->
@@ -538,6 +538,8 @@ Error message and password prompt
 <li>2020-01-31</li>
 
 <li>2020-03-13</li>
+
+<li>2020-03-25</li>
 
 <li>Changelog</li>
 
@@ -9897,8 +9899,8 @@ Error message and password prompt
 <div created="20200322114652687" modified="20200322114653377" title="$:/palette">
 <pre>$:/palettes/Twilight</pre>
 </div>
-<div created="20200322112618973" modified="20200324073337249" title="$:/SiteSubtitle">
-<pre>Updated 2020-03-24</pre>
+<div created="20200322112618973" modified="20200325074407161" title="$:/SiteSubtitle">
+<pre>Updated 2020-03-25</pre>
 </div>
 <div created="20200322112552901" modified="20200324113952891" title="$:/SiteTitle">
 <pre>Neltulz - Bonus Utils</pre>
@@ -9927,7 +9929,7 @@ Error message and password prompt
 <div created="20200322115726576" modified="20200322115729446" title="$:/state/plugin-info--270617185-$:/themes/tiddlywiki/readonly">
 <pre>no</pre>
 </div>
-<div created="20200324053138176" modified="20200324121606372" title="$:/state/SampleReveal2">
+<div created="20200324053138176" modified="20200325075151683" title="$:/state/SampleReveal2">
 <pre>hide</pre>
 </div>
 <div created="20200322151411972" modified="20200324114103107" title="$:/state/showeditpreview">
@@ -9954,13 +9956,13 @@ Error message and password prompt
 <div created="20200322113158128" modified="20200323074322140" title="$:/state/tab--1963855381">
 <pre>$:/core/ui/ControlPanel/Palette</pre>
 </div>
-<div created="20200322113150755" modified="20200324121702285" title="$:/state/tab--2112689675">
-<pre>$:/core/ui/ControlPanel/Advanced</pre>
+<div created="20200322113150755" modified="20200325074405400" title="$:/state/tab--2112689675">
+<pre>$:/core/ui/ControlPanel/Basics</pre>
 </div>
 <div created="20200322114517452" modified="20200322144059952" title="$:/state/tab--86143343">
 <pre>$:/core/ui/ControlPanel/Plugins/Installed/Plugins</pre>
 </div>
-<div created="20200322120244857" modified="20200323075016717" title="$:/state/tab--959111941">
+<div created="20200322120244857" modified="20200325073956960" title="$:/state/tab--959111941">
 <pre>$:/core/ui/ControlPanel/Stylesheets</pre>
 </div>
 <div created="20200322114528528" modified="20200322144108170" title="$:/state/tab-1342078386">
@@ -9996,7 +9998,7 @@ Error message and password prompt
 <div created="20200322153942718" modified="20200322153942718" title="$:/state/toc/Neltulz - Smart Sharpen Add-on-NTZSS : Changelog--1813068921">
 <pre>open</pre>
 </div>
-<div created="20200322160608762" modified="20200324121602287" title="$:/state/toc/TableOfContents-Changelog--118161433">
+<div created="20200322160608762" modified="20200325075150791" title="$:/state/toc/TableOfContents-Changelog--118161433">
 <pre>close</pre>
 </div>
 <div created="20200324075827193" modified="20200324075827193" title="$:/state/toc/TableOfContents-Changelog--127205207">
@@ -11043,18 +11045,33 @@ This plugin also requires the JSZip plugin ([[$:/plugins/tiddlywiki/jszip]]) to 
 
 * Fixed bug with &lt;mark&gt;SnapCursor+&lt;/mark&gt; when using a non standard rotation mode/order (i.e. Quaternion) would cause the cursor orientation to not be set.</pre>
 </div>
-<div created="20200322151809924" list="2019-12-31 2019-12-26 2019-12-22" modified="20200324121334318" tags="TableOfContents" title="Changelog">
-<pre>!! 2020-03-13
+<div created="20200325074100418" modified="20200325075137431" tags="Changelog" title="2020-03-25">
+<pre>* Added &lt;mark&gt;Smart Instance Collection&lt;/mark&gt; feature that allows you to convert selected objects into instance collections, and move the objects to another scene. Great for creating asset packs!
 
-* Added &lt;mark&gt;Smart Instance Collection&lt;/mark&gt; feature that allows you to convert selected objects into instance collections, and move the objects to another scene.  Great for creating asset packs!
-
-* Added options for &lt;mark&gt;Group With Empty&lt;/mark&gt; for overriding &lt;mark&gt;Empty Name, Location, and Size&lt;/mark&gt; in the addon preferences.
+* Added options for &lt;mark&gt;Group With Empty&lt;/mark&gt; for overriding &lt;mark&gt;Empty Name, Location, and Size&lt;/mark&gt; in the add-on preferences.
 
 * Added options for &lt;mark&gt;Group With Empty&lt;/mark&gt; to delete objects from the &lt;mark&gt;active scene&lt;/mark&gt; or &lt;mark&gt;all scenes&lt;/mark&gt;.
 
 * Fixed bug with &lt;mark&gt;Group with Emtpy&lt;/mark&gt; when Objects would &lt;mark&gt;group incorrectly&lt;/mark&gt; when the active object was not one of the selected objects
 
-* Fixed bug with &lt;mark&gt;SnapCursor+&lt;/mark&gt; when using a non standard rotation mode/order (i.e. Quaternion) would cause the cursor orientation to not be set.
+* Fixed bug with &lt;mark&gt;SnapCursor+&lt;/mark&gt; when using a &lt;mark&gt;non standard rotation mode/order&lt;/mark&gt; (i.e. Quaternion) would cause the cursor orientation to not be set.
+
+* Fixed a bug with &lt;mark&gt;keymaps&lt;/mark&gt; that would cause the add-on to &lt;mark&gt;register partially&lt;/mark&gt; and throw errors and become unusable.</pre>
+</div>
+<div created="20200322151809924" list="2020-03-25 2020-03-13 2020-01-31 2020-01-26 2020-01-22 2020-01-20" modified="20200325075132941" tags="TableOfContents" title="Changelog">
+<pre>!! 2020-03-25
+
+* Added &lt;mark&gt;Smart Instance Collection&lt;/mark&gt; feature that allows you to convert selected objects into instance collections, and move the objects to another scene. Great for creating asset packs!
+
+* Added options for &lt;mark&gt;Group With Empty&lt;/mark&gt; for overriding &lt;mark&gt;Empty Name, Location, and Size&lt;/mark&gt; in the add-on preferences.
+
+* Added options for &lt;mark&gt;Group With Empty&lt;/mark&gt; to delete objects from the &lt;mark&gt;active scene&lt;/mark&gt; or &lt;mark&gt;all scenes&lt;/mark&gt;.
+
+* Fixed bug with &lt;mark&gt;Group with Emtpy&lt;/mark&gt; when Objects would &lt;mark&gt;group incorrectly&lt;/mark&gt; when the active object was not one of the selected objects
+
+* Fixed bug with &lt;mark&gt;SnapCursor+&lt;/mark&gt; when using a &lt;mark&gt;non standard rotation mode/order&lt;/mark&gt; (i.e. Quaternion) would cause the cursor orientation to not be set.
+
+* Fixed a bug with &lt;mark&gt;keymaps&lt;/mark&gt; that would cause the add-on to &lt;mark&gt;register partially&lt;/mark&gt; and throw errors and become unusable.
 
 
 &lt;$reveal type=&quot;nomatch&quot; state=&quot;$:/state/SampleReveal2&quot; text=&quot;show&quot;&gt;
@@ -11112,7 +11129,7 @@ Alternatively, you may e-mail me at &lt;mark&gt;neilvmoore@gmail.com&lt;/mark&gt
 ** Author: iceyethe
 ** Permission to include script with Neltulz - Bonus Utils Add-on</pre>
 </div>
-<div created="20200322122059214" modified="20200324161500860" title="Documentation">
+<div created="20200322122059214" modified="20200325074026483" title="Documentation">
 <pre>[img[Neltulz_Bonus_Utils_Banner_21x9_for_readme.jpg]]
 
 A collection of useful utilities, pie menus, and menus for Blender.
@@ -11124,8 +11141,8 @@ A collection of useful utilities, pie menus, and menus for Blender.
 &lt;a class='tc-tiddlylink' href='https://www.logichaos.com/neltulz_blender_addons/neltulz_bonus_utils/README_Neltulz_Bonus_Utils' download='README_Neltulz_Bonus_Utils.html'&gt;Download this documentation file for offline viewing.&lt;/a&gt;
 
 |Author |Neil V. Moore |
-|&lt;span class='latestVersionAndDate'&gt;Latest Version&lt;/span&gt; |&lt;span class='latestVersionAndDate'&gt;1.0.4&lt;/span&gt; |
-|&lt;span class='latestVersionAndDate'&gt;Latest Update&lt;/span&gt; |&lt;span class='latestVersionAndDate'&gt;2020-03-13&lt;/span&gt; |
+|&lt;span class='latestVersionAndDate'&gt;Latest Version&lt;/span&gt; |&lt;span class='latestVersionAndDate'&gt;1.0.5&lt;/span&gt; |
+|&lt;span class='latestVersionAndDate'&gt;Latest Update&lt;/span&gt; |&lt;span class='latestVersionAndDate'&gt;2020-03-25&lt;/span&gt; |
 |Original Release Date: |2020-01-20 |
 |Compatible Blender Version: |2.81 |
 |License: |[[GNU GPL v3.0|License]] |
@@ -11916,8 +11933,9 @@ Public License instead of this License.  But first, please read
 <div created="20200324053429183" modified="20200324053437802" tags="TableOfContents" title="More Neltulz Add-ons">
 <pre></pre>
 </div>
-<div created="20200323075713016" modified="20200324121708896" tags="$:/tags/Stylesheet" title="Neil's - Force Read-Only Mode CSS">
-<pre>.tc-reveal button[title='More actions'],
+<div created="20200323075713016" modified="20200325074007801" tags="$:/tags/Stylesheet" title="Neil's - Force Read-Only Mode CSS">
+<pre>/*
+.tc-reveal button[title='More actions'],
 .tc-reveal button[title='Edit this tiddler'],
 .tc-reveal button[title='Advanced search'],
 .tc-reveal button[title='Import many types of file including text, image, TiddlyWiki or JSON'],
@@ -11928,7 +11946,7 @@ Public License instead of this License.  But first, please read
 {
     display: none !important;
 }
-</pre>
+*/</pre>
 </div>
 <div created="20200323075107605" modified="20200324094820917" tags="$:/tags/Stylesheet" title="Neil's Custom CSS">
 <pre>/* Neil - Force the body to always show vertical scrollbar */

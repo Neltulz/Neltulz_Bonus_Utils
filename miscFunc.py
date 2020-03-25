@@ -7,6 +7,7 @@ import numpy
 from itertools import chain
 from itertools import permutations
 
+
 def average(lst): 
     return sum(lst) / len(lst) 
 
@@ -132,6 +133,7 @@ def findVertexGroup(self, context, obj, vertexGroupName):
 
 
 def bboxFromSelection():
+
     #returns the bounding box of a selection.  Special thanks and Source: iceythe
     all_vcos = []
     # Get all vert cos from objects in edit mode
@@ -156,7 +158,7 @@ def bboxFromSelection():
 
     return bbox_vecs
 
-def dimensionsFromSelection(self, context, minMaxAvg):
+def dimensionsFromSelection(self, context, minMaxAvg='AVG'):
 
     #Get dimension from selection - Special thanks & source: iceythe
 
@@ -212,3 +214,193 @@ def deactivateProp(self, context, propName=''):
             setattr(addonPrefs, propName, defaultVal)
 
         addonPrefs.preventInfiniteRecursion = False
+
+def retreive_op_props_from_addonPrefs(self, context, addonPrefs=None, opPropNameList=None, opPropPrefix=None):
+
+    if self.bUseOverridesFromAddonPrefs:
+
+        for opPropName in opPropNameList:
+            
+            #get the value of the addonPrefs property
+            addonPropActive = getattr(addonPrefs, f'{opPropPrefix}{opPropName}_active', None)
+
+            if addonPropActive is not None:
+                
+                if addonPropActive:
+
+                    addonPropVal = getattr(addonPrefs, f'{opPropPrefix}{opPropName}', None)
+
+                    #set the value of the operator property to the value of the addonPrefs property
+                    setattr(self, opPropName, addonPropVal)
+
+# END retreive_op_props_from_addonPrefs()
+
+def getOutliners(self, context):
+    outliners = [] #declare
+    for win in context.window_manager.windows:
+        for area in win.screen.areas:
+            if area.type == 'OUTLINER':
+                outliners.append({'window' : win, 'area': area})
+
+    return outliners
+
+# END getOutliners()
+
+def expand_selected_objs_in_outliner(self, context, selObjs=None, outliners=None, activeObj=None):
+
+    if activeObj is None:
+        activeObj = context.view_layer.objects.active
+
+    if selObjs is None:
+        selObjs = context.selected_objects
+
+    if outliners is None:
+        outliners = getOutliners(self, context)
+
+    for obj in selObjs:
+        
+        context.view_layer.objects.active = obj #set object as active object
+
+        for outliner in outliners:
+            win = outliner['window']
+            area = outliner['area']
+
+            contextOverride = {'window': win, 'screen': win.screen, 'area': area}
+            bpy.ops.outliner.show_active(contextOverride)
+
+    if activeObj is not None:
+        context.view_layer.objects.active = activeObj #reset Active Object
+
+        
+# END expand_selected_objs_in_outliner()
+
+def redraw_all_outliners(self, context, outliners=None):
+
+    if outliners is None:
+        outliners = getOutliners(self, context)
+
+    for outliner in outliners:
+        outliner['area'].tag_redraw() #redraw outliner
+
+# END redraw_all_outliners()
+
+
+def snapCursorToMedianPoint(self, context, activeObj=None, objMode=None, tformPivotPoint=None):
+
+    if activeObj is None:
+        activeObj = context.view_layer.objects.active
+
+    if objMode is None:
+        objMode is context.object.mode
+
+    if tformPivotPoint is None:
+        tformPivotPoint = f'{context.scene.tool_settings.transform_pivot_point}'
+
+    if activeObj.type == "MESH":
+        
+
+        if objMode == "OBJECT":
+            
+            
+            if tformPivotPoint == "ACTIVE_ELEMENT":
+                bpy.ops.view3d.snap_cursor_to_active()
+
+            elif tformPivotPoint == "INDIVIDUAL_ORIGINS":
+                context.scene.tool_settings.transform_pivot_point = 'MEDIAN_POINT'
+                bpy.ops.view3d.snap_cursor_to_selected()
+                context.scene.tool_settings.transform_pivot_point = tformPivotPoint #reset
+                
+
+            else:
+                bpy.ops.view3d.snap_cursor_to_selected()
+        else:
+            bpy.ops.view3d.snap_cursor_to_selected()
+
+    else:
+        if tformPivotPoint == "ACTIVE_ELEMENT":
+            bpy.ops.view3d.snap_cursor_to_active()
+
+        else:
+            bpy.ops.view3d.snap_cursor_to_selected()
+# END snapCursorToMedianPoint()
+
+def snapCursorToBoundingBoxCenter(self, context, activeObj=None, objMode=None, tformPivotPoint=None, numObjsWithVertsSel=None):
+
+    if activeObj is None:
+        activeObj = context.view_layer.objects.active
+
+    if objMode is None:
+        objMode = context.object.mode
+
+    if tformPivotPoint is None:
+        tformPivotPoint = f'{context.scene.tool_settings.transform_pivot_point}'
+
+    if activeObj.type == "MESH":
+
+        if objMode == "OBJECT":
+            
+            if tformPivotPoint == "ACTIVE_ELEMENT":
+                bpy.ops.view3d.snap_cursor_to_active()
+
+            else:
+                bpy.ops.view3d.snap_cursor_to_selected()
+
+        else:
+
+            if numObjsWithVertsSel is not None:
+
+                if numObjsWithVertsSel == 1:  
+
+                    bm = bmesh.from_edit_mesh(activeObj.data)
+                    mat = activeObj.matrix_world.copy()
+
+                    vco = [v.co for v in bm.verts if v.select]
+                    arr = np.array(vco).reshape(len(vco), 3)
+
+                    center = mat @ Vector((arr.min(axis=0) + arr.max(axis=0)) * 0.5)
+
+                    context.scene.cursor.location = center
+                
+                if numObjsWithVertsSel >= 2:
+                    bpy.ops.view3d.snap_cursor_to_selected() #sloppy fallback
+    
+    else:
+        if tformPivotPoint == "ACTIVE_ELEMENT":
+            bpy.ops.view3d.snap_cursor_to_active()
+
+        else:
+            bpy.ops.view3d.snap_cursor_to_selected()
+# END snapCursorToBoundingBoxCenter()
+
+
+def max_dim_from_objs_or_empties(self, context, minMaxAvg='AVG', objs=None):
+
+    #Get max dimension from objects and empties - Special thanks & source: iceythe
+    all_vcos = []
+    for o in objs:
+        mat_w = o.matrix_world
+        if o.type == 'EMPTY':
+            size = o.empty_display_size
+            all_vcos.extend([mat_w @ Vector(point) for point in
+                            permutations((-size, size) * 2, 3)])
+            continue
+        all_vcos.extend([mat_w @ Vector(point[:])
+                        for point in o.bound_box[:]])
+
+    it = numpy.fromiter(chain.from_iterable((all_vcos)), dtype=float)
+    it.shape = (len(all_vcos), 3)
+    _min, _max = Vector(it.min(0).tolist()), Vector(it.max(0).tolist())
+
+    if minMaxAvg == "MIN":
+        result = min((_max - _min))
+    elif minMaxAvg == "MAX": 
+        result = max((_max - _min))
+    elif minMaxAvg == "AVG":
+        result = average((_max - _min))
+
+    #prevent zero result
+    if result == 0:
+        result = 1
+
+    return result
+# END max_dim_from_objs_or_empties()

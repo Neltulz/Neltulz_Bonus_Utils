@@ -3,7 +3,7 @@ bl_info = {
     "author" : "Neil V. Moore",
     "description" : "A collection of miscellaneous bonus utilities",
     "blender" : (2, 81, 0),
-    "version" : (1, 0, 4),
+    "version" : (1, 0, 5),
     "location" : "View3D",
     "warning" : "",
     "category" : "3D View",
@@ -33,6 +33,7 @@ from . addonPreferences           import VIEW3D_OT_ntzbu_addon_prefs
 from . delallunselobjsOt          import VIEW3D_OT_ntzbu_delete_all_unselected_objs
 from . groupWithEmptyOt           import VIEW3D_OT_ntzbu_group_with_empty
 from . smartUnparentOt            import VIEW3D_OT_ntzbu_smart_unparent
+from . instancecollOt             import VIEW3D_OT_ntzbu_smart_instance_collection
 
 from . modifiertoolsOt            import VIEW3D_OT_ntzbu_modifier_visibility
 from . modifiertoolsOt            import VIEW3D_OT_ntzbu_apply_modifiers
@@ -92,6 +93,7 @@ classes = (
     VIEW3D_OT_ntzbu_delete_all_unselected_objs,
     VIEW3D_OT_ntzbu_group_with_empty,
     VIEW3D_OT_ntzbu_smart_unparent,
+    VIEW3D_OT_ntzbu_smart_instance_collection,
     VIEW3D_OT_ntzbu_modifier_visibility,
     VIEW3D_OT_ntzbu_apply_modifiers,
     VIEW3D_OT_ntzbu_remove_modifiers,
@@ -121,7 +123,7 @@ classes = (
 #    Register classes from the classes list
 # -----------------------------------------------------------------------------    
 
-addonKeymaps = {}
+addonKeymaps = []
 
 #vscode pme workaround from iceythe (part 2 of 2)
 def _reg():
@@ -147,7 +149,7 @@ def register():
     
 
     #add keymaps from keymaps.py
-    keymaps.regKM(addonKeymaps, wm)
+    keymaps.regKM(addonKeymaps)
 
 
     #add property group to the scene
@@ -173,7 +175,7 @@ def unregister():
         unregister_class(cls)
 
     #remove keymaps
-    keymaps.unregKM(addonKeymaps, wm)
+    keymaps.unregKM(addonKeymaps)
 
 
 

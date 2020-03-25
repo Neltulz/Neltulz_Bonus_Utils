@@ -77,7 +77,7 @@ class VIEW3D_OT_ntzbu_addon_prefs(AddonPreferences):
     navTabs : EnumProperty (
         items       = navTabs_List,
         name        = "Navigation Tabs",
-        default     = "UILAY",
+        default     = "OBJ",
     )
 
     category: StringProperty(
@@ -119,14 +119,6 @@ class VIEW3D_OT_ntzbu_addon_prefs(AddonPreferences):
         default     = True,
     )
 
-    '''
-    aioToolSettings_showOKButton : BoolProperty (
-        name        = "Use Popup With OK Button",
-        description = 'Adds an "OK" button to the popup.  Pro: prevents the popup from disappearing until you explicitly click OK or click outside of the popup.  Con: Requires an extra click',
-        default     = False,
-    )
-    '''
-
     aioToolSettings_showOKButton_List = [
         ("YES",             "Yes",         "",          "", 0),
         ("NO",              "No",          "",          "", 1),
@@ -139,9 +131,9 @@ class VIEW3D_OT_ntzbu_addon_prefs(AddonPreferences):
         default     = "NO",
     )
 
-    # -----------------------------------------------------------------------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     #    Delete Unselected Objects
-    # -----------------------------------------------------------------------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     show_deleteUnselObjs_addonPrefs : BoolProperty (
         name        = 'Show "Delete Unselected Objects" Add-on Preferences',
@@ -160,9 +152,9 @@ class VIEW3D_OT_ntzbu_addon_prefs(AddonPreferences):
         default     = "YES",
     )
 
-    # -----------------------------------------------------------------------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     #    Group With Empty
-    # -----------------------------------------------------------------------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     show_groupWithEmpty_addonPrefs : BoolProperty (
         name        = 'Show "Group with Empty" Add-on Preferences',
@@ -181,9 +173,101 @@ class VIEW3D_OT_ntzbu_addon_prefs(AddonPreferences):
         default     = "COLLAPSE",
     )
 
-    # -----------------------------------------------------------------------------
+    def groupWithEmpty_emptyName_deactivate(self, context):
+        miscFunc.deactivateProp(self, context, propName='groupWithEmpty_emptyName')
+
+    def groupWithEmpty_emptyName_activate(self, context):
+        miscFunc.activateProp(self, context, propName='groupWithEmpty_emptyName')
+
+    groupWithEmpty_emptyName_active : BoolProperty (
+        name        = 'Deactivate & Reset "Empty Name"',
+        default     = False,
+        update      = groupWithEmpty_emptyName_deactivate,
+    )
+
+    groupWithEmpty_emptyName : StringProperty (
+        name        = 'Empty Name',
+        default     = "Group",
+        update      = groupWithEmpty_emptyName_activate
+    )
+
+    def groupWithEmpty_emptyLocation_deactivate(self, context):
+        miscFunc.deactivateProp(self, context, propName='groupWithEmpty_emptyLocation')
+
+    def groupWithEmpty_emptyLocation_activate(self, context):
+        miscFunc.activateProp(self, context, propName='groupWithEmpty_emptyLocation')
+
+    groupWithEmpty_emptyLocation_active : BoolProperty (
+        name        = 'Deactivate & Reset "Empty Location"',
+        default     = False,
+        update      = groupWithEmpty_emptyLocation_deactivate,
+    )
+
+    groupWithEmpty_emptyLocation_List = [
+        ("MEDIAN_POINT",             "Median",         "Median Point",          "", 0),
+        ("BOUNDING_BOX_CENTER",      "Bound",          "Bounding Box Center",   "", 1),
+        ("ACTIVE_ELEMENT",           "Active",         "Active Element",        "", 2),
+        ("WORIGIN",                  "Origin",         "World Orign",           "", 3),
+    ]
+
+    groupWithEmpty_emptyLocation : EnumProperty (
+        items       = groupWithEmpty_emptyLocation_List,
+        name        = "Empty Location",
+        default     = "MEDIAN_POINT",
+        update      = groupWithEmpty_emptyLocation_activate,
+    )
+
+
+
+    def groupWithEmpty_emptySize_deactivate(self, context):
+        miscFunc.deactivateProp(self, context, propName='groupWithEmpty_emptySize')
+
+    def groupWithEmpty_emptySize_activate(self, context):
+        miscFunc.activateProp(self, context, propName='groupWithEmpty_emptySize')
+
+    groupWithEmpty_emptySize_active : BoolProperty (
+        name        = 'Deactivate & Reset "Empty Size"',
+        default     = False,
+        update      = groupWithEmpty_emptySize_deactivate,
+    )
+
+    groupWithEmpty_emptySize_List = [
+        ("1",      "1",         "",   "", 0),
+        ("0.01",   "0.01",      "",   "", 1),
+        ("0.0001", "0.0001",    "",   "", 2),
+    ]
+
+    groupWithEmpty_emptySize : EnumProperty (
+        items       = groupWithEmpty_emptySize_List,
+        name        = "Empty Location",
+        default     = "0.01",
+        update      = groupWithEmpty_emptySize_activate,
+    )
+
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    #    Smart Instance Collection
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    show_smartInstColl_addonPrefs : BoolProperty (
+        name        = 'Show "Smart Instance Collection" Add-on Preferences',
+        default     = True,
+    )
+
+    smartInstColl_showOperatorOptions_List = [
+        ("EXPAND",             "Expand",         "",          "", 0),
+        ("COLLAPSE",           "Collapse",       "",          "", 1),
+    ]
+
+    smartInstColl_showOperatorOptions : EnumProperty (
+        items       = smartInstColl_showOperatorOptions_List,
+        name        = 'Show Operator Options',
+        description = 'Shows additional operator options',
+        default     = "EXPAND",
+    )
+
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     #    Select Contiguous Edges
-    # -----------------------------------------------------------------------------
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     show_selContigEdg_addonPrefs : BoolProperty (
         name        = 'Show "Select Contiguous Edges" Add-on Preferences',
@@ -338,13 +422,13 @@ class VIEW3D_OT_ntzbu_addon_prefs(AddonPreferences):
             
             box = lay.box().column()
 
-            miscLay.centeredText(lay=box, text='To customize these keymaps, go to your keymaps', icon='QUESTION')
-            miscLay.centeredText(lay=box, text='tab on the left and do a search for "NTZBU"')
+            miscLay.forceJustifyText(lay=box, text='To customize these keymaps, go to your keymaps', icon='QUESTION')
+            miscLay.forceJustifyText(lay=box, text='tab on the left and do a search for "NTZBU"')
            
             box.separator()
 
-            miscLay.centeredText(lay=box, text='If your keymaps are not working,')
-            miscLay.centeredText(lay=box, text='check for conflicting add-ons and keymaps.')
+            miscLay.forceJustifyText(lay=box, text='If your keymaps are not working,')
+            miscLay.forceJustifyText(lay=box, text='check for conflicting add-ons and keymaps.')
 
             #--------------------------------------------------------------------------------
             # NTZBU : Headers
@@ -476,7 +560,27 @@ class VIEW3D_OT_ntzbu_addon_prefs(AddonPreferences):
 
             boxInner.separator()
 
-            
+            section = boxInner.column(align=True)
+
+            section.separator()
+
+            miscLay.createSectionToggleOperator(self, context, 
+                lay         = section,
+                height      = 1.25,
+                data        = self, 
+                dataStr     = 'addonPrefs', 
+                sectionBool = 'show_smartInstColl_addonPrefs', 
+                text        = 'Smart Instance Collection'
+            )
+
+            if self.show_smartInstColl_addonPrefs:
+
+                sectionBox = section.box().column(align=True)
+
+                miscLay.smartInstColl_options(self, context, lay=sectionBox)
+
+            boxInner.separator()
+
 
 
         elif self.navTabs == "MESH":

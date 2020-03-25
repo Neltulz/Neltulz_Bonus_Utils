@@ -110,9 +110,24 @@ class VIEW3D_OT_ntzbu_select_contiguous_edges(Operator):
         return (context.mode == 'EDIT_MESH' and
                 getattr(context.object.data, "total_edge_sel", 0))
 
+
+    def invoke(self, context, event):
+        scn = context.scene
+
+        addonPrefs = context.preferences.addons[__package__].preferences
+
+        # BEGIN Retreive Operator properties from addon preferences
+        opPropNameList = ['maxAngle', 'maxEdges', 'direction']
+        miscFunc.retreive_op_props_from_addonPrefs(self, context, addonPrefs=addonPrefs, opPropNameList=opPropNameList, opPropPrefix='selContigEdg_')
+        # END Retreive Operator properties from addon preferences
+
+        return self.execute(context)
+    #END invoke()
+
     def execute(self, context):
         self.contiguous_edge(context)
         return {'FINISHED'}
+    #END execute()
 
     def draw(self, context):
         scn = context.scene
@@ -200,33 +215,7 @@ class VIEW3D_OT_ntzbu_select_contiguous_edges(Operator):
                 pool = _pool
 
         bmesh.update_edit_mesh(ob.data)
+    # END contiguous_edge()
 
-    def invoke(self, context, event):
-        scn = context.scene
-
-        addonPrefs = context.preferences.addons[__package__].preferences
-        
-        if self.bUseOverridesFromAddonPrefs:
-
-            #prop list
-            propList = ['maxAngle', 'maxEdges', 'direction']
-
-            for propName in propList:
-                
-                #get the value of the addonPrefs property
-                addonPropActive = getattr(addonPrefs, f'selContigEdg_{propName}_active', None)
-
-                if addonPropActive is not None:
-                    
-                    if addonPropActive:
-
-                        addonPropVal = getattr(addonPrefs, f'selContigEdg_{propName}', None)
-
-                        #set the value of the operator property to the value of the addonPrefs property
-                        setattr(self, propName, addonPropVal)
-
-
-        return self.execute(context)
-    #END invoke()
 
 #END Operator()

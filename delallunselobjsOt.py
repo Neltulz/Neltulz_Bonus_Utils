@@ -7,9 +7,10 @@
 import ctypes
 import bpy
 from . import miscFunc
+from . import miscLay
 
 from bpy.props import (StringProperty, BoolProperty, IntProperty, FloatProperty, FloatVectorProperty, EnumProperty, PointerProperty)
-from bpy.types import (Operator)
+from bpy.types import (Operator, Menu)
 
 class VIEW3D_OT_ntzbu_delete_all_unselected_objs(Operator):
     """Tooltip"""
@@ -20,6 +21,17 @@ class VIEW3D_OT_ntzbu_delete_all_unselected_objs(Operator):
 
 
     drawConfirmDiag = False
+
+    delObjsFrom_List = [
+        ("ACTIVE_SCENE",     "Active Scene",      '',  '', 0),
+        ("ALL_SCENES",       "All Scenes",        '',  '', 1),
+    ]
+
+    delObjsFrom : EnumProperty (
+        items       = delObjsFrom_List,
+        name        = 'Delete objects from "current scene", or "all scenes"',
+        default     = 'ACTIVE_SCENE'
+    )
 
     delOrphanedColls : BoolProperty (
         name        = 'Delete Orphaned Collections',
@@ -46,10 +58,27 @@ class VIEW3D_OT_ntzbu_delete_all_unselected_objs(Operator):
         lay = self.layout.column(align=True)
 
         if self.drawConfirmDiag:
-            lay.label(text="Are you sure?")
+            box = lay.box().column(align=True)
+            miscLay.forceJustifyText(lay=box, text='Delete From:', alignment='LEFT')
+            row = box.row(align=True)
+            row.prop(self, 'delObjsFrom', expand=True)
+
+            box.separator()
+
+            box.prop(self, 'delOrphanedColls', expand=True)
+
+            box.separator()
+
+            miscLay.forceJustifyText(lay=box, text='    Continue?', alignment='CENTER')
         
         else:
-            lay.prop(self, "delOrphanedColls")
+            row = lay.row(align=True)
+            row.label(text='Delete From:')
+            row.prop(self, 'delObjsFrom', expand=True)
+
+            lay.separator()
+
+            lay.prop(self, 'delOrphanedColls')
     # END draw()
 
     def execute(self, context):
@@ -59,7 +88,14 @@ class VIEW3D_OT_ntzbu_delete_all_unselected_objs(Operator):
         scn = context.scene
 
         #store list of objects & selected objects
-        objs = bpy.data.objects
+        
+        objs = None #declare
+        if self.delObjsFrom == 'ACTIVE_SCENE':
+            objs = context.scene.objects
+
+        elif self.delObjsFrom == 'ALL_SCENES':
+            objs = bpy.data.objects
+
         selObjs = bpy.context.selected_objects
 
         objs_to_be_removed = set() #declare
@@ -72,7 +108,7 @@ class VIEW3D_OT_ntzbu_delete_all_unselected_objs(Operator):
         
         #remove all objects in the objs_to_be_removed set
         for obj in objs_to_be_removed:
-            objs.remove(obj, do_unlink=True)
+            bpy.data.objects.remove(obj, do_unlink=True)
 
         if self.delOrphanedColls:
 
@@ -90,6 +126,8 @@ class VIEW3D_OT_ntzbu_delete_all_unselected_objs(Operator):
 
                 else: #for loop did not break (no objects found in the list of selected objects)
                     bpy.data.collections.remove(collection)
+
+        self.report({'INFO'}, f'{len(objs_to_be_removed)} object(s) removed.' )
 
         self.useConfirmDiag = True #reset
         

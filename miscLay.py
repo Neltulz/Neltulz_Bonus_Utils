@@ -41,6 +41,7 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
         #Group with Empty
         btnWithDropdown = sectionInner.row(align=True)
         op = btnWithDropdown.operator("view3d.ntzbu_group_with_empty", text="Group With Empty")
+        op.bUseOverridesFromAddonPrefs = True
 
         popover = btnWithDropdown.row(align=True)
         popover.alignment="RIGHT"
@@ -48,9 +49,15 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
 
         sectionInner.separator()
         
-        #Group with Empty
+        #Smart Unparent
         btn = sectionInner.row(align=True)
         op = btn.operator("view3d.ntzbu_smart_unparent", text="Smart Unparent")
+
+        sectionInner.separator()
+        
+        #Smart Instance Collection
+        btn = sectionInner.row(align=True)
+        op = btn.operator("view3d.ntzbu_smart_instance_collection", text="Smart Instance Collection")
         
 
     #-----------------------------------------------------------------------------------------------------------------------------------------------
@@ -110,12 +117,6 @@ def mainBonusUtilsPanel(self, context, bUseCompactSidebarPanel, bUseCompactPopup
         op = btnRow.operator("view3d.ntzbu_modifier_visibility", text="Disable")
         op.enableDisableToggle = "DISABLE"
         op.tooltip = "Disable Modifiers.  Default: Selected Objects.  SHIFT: All Objects.  CTRL: Unselected objects"
-
-        '''
-        popover = btnWithDropdown.row(align=True)
-        popover.alignment="RIGHT"
-        popoverBtn = popover.popover(text="", panel="VIEW3D_PT_ntzbu_modifier_tools_options", icon="NONE")
-        '''
 
         #Apply / Remove all modifiers
         btnWithDropdown = sectionInner.row(align=True)
@@ -179,8 +180,7 @@ def createShowHide(self, context, scn, properties, showHideBool, optionalCheckbo
     emptySpace.alignment = "EXPAND"
     emptySpace.prop(data, showHideBool, text=" ", emboss=False)
 
-
-def createPropOLD(self, context, scn, bEnabled, labelText, data, propItem, scale_y, labelScale, propScale, labelAlign, propAlign, propText, bExpandProp, bUseSlider, layout):
+def createPropOLD(self, context, scn=None, bEnabled=True, labelText='', data=None, propItem='', scale_y=1, labelScale=5, propScale=20, labelAlign='RIGHT', propAlign='EXPAND', propText='', bExpandProp=False, bUseSlider=False, layout=None):
 
     propRow = layout.row(align=True)
 
@@ -342,6 +342,36 @@ def groupWithEmpty_options(self, context, lay=None):
         op2Options  = [{'propName' : 'state', 'propVal' : 'False'}],
     )
 
+    lay.separator()
+
+    createProp_or_Op(self, context, lay,
+        labelTxt     = 'Empty Name',
+        propText     = '',
+        propName     = 'groupWithEmpty_emptyName',
+    )
+
+    lay.separator()
+
+    createProp_or_Op(self, context, lay,
+        labelTxt     = 'Empty Location',
+        propName     = 'groupWithEmpty_emptyLocation',
+    )
+
+    lay.separator()
+
+    createProp_or_Op(self, context, lay,
+        labelTxt     = 'Empty Size',
+        propName     = 'groupWithEmpty_emptySize',
+    )
+# END groupWithEmpty_options()
+
+def smartInstColl_options(self, context, lay=None):
+        createProp_or_Op(self, context, lay,
+        labelTxt     = 'Operator Options',
+        propName     = "smartInstColl_showOperatorOptions",
+    )
+# END smartInstColl_options()
+
 
 def createSectionToggleOperator(self, context, lay=None, data=None, dataStr='NONE', sectionBool='NONE', text='NONE', width=0, height=1):
 
@@ -370,7 +400,7 @@ def createSectionToggleOperator(self, context, lay=None, data=None, dataStr='NON
         op.data = dataStr
         op.group = sectionBool
 
-def centeredText(lay=None, text="", icon='NONE'):
+def forceJustifyText(lay=None, text="", icon='NONE', alignment='CENTER'):
     grid = lay.grid_flow(align=True, columns=1, even_columns=False, row_major=True)
 
     rowTitle1 = grid.row(align=True)
@@ -379,7 +409,7 @@ def centeredText(lay=None, text="", icon='NONE'):
     rowTitle1.label(text=' ')
 
     rowTitle2 = grid.row(align=True)
-    rowTitle2.alignment="CENTER"
+    rowTitle2.alignment=alignment
     rowTitle2.label(text=text, icon=icon)
 
 
