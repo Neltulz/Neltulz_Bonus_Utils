@@ -108,7 +108,7 @@ class VIEW3D_PT_ntzbu_modifier_tools_options(Panel):
 
 
 class VIEW3D_PT_ntzbu_sidebar_panel(Panel):
-    bl_label            = 'Bonus Utils v1.0.5'
+    bl_label            = 'Bonus Utils v1.0.6'
     bl_category         = 'Neltulz'
     bl_space_type       = 'VIEW_3D'
     bl_region_type      = 'UI'

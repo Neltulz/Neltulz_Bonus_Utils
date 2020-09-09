@@ -327,7 +327,7 @@ class VIEW3D_OT_ntzbu_apply_modifiers(Operator):
                 bpy.ops.object.mode_set(mode='OBJECT')
             
             try:
-                bpy.ops.object.modifier_apply(apply_as='DATA', modifier=modifier.name)
+                bpy.ops.object.modifier_apply(modifier=modifier.name)
             except:
                 #if a modifier is disabled due to improper settings, remove the modifier
                 obj.modifiers.remove(modifier)

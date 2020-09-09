@@ -74,7 +74,7 @@ class VIEW3D_OT_ntzbu_select_contiguous_edges(Operator):
         name        = "Max Angle",
         default     = 15,
         min         = 0,
-        max         = 360,
+        max         = 180,
     )
 
     

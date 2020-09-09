@@ -85,7 +85,7 @@ class VIEW3D_OT_ntzbu_offset_all_faces(Operator):
                     neltulzOffsetModifier.use_rim_only = True
 
                     if not self.keepModifier:
-                        bpy.ops.object.modifier_apply(apply_as='DATA', modifier="Neltulz - Offset Faces")
+                        bpy.ops.object.modifier_apply(modifier="Neltulz - Offset Faces")
 
                     bpy.ops.object.mode_set(mode=self.objectModeAtBegin) #switch back to mode at begin
                 
